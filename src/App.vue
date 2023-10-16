@@ -6,7 +6,7 @@ function scrollToElement() {
       const targetElement = document.getElementById('voting');
       if (targetElement) {
         targetElement.scrollIntoView({
-          behavior: 'smooth', // 使用平滑滚动效果
+          // behavior: 'smooth', // 使用平滑滚动效果
           block: 'start',     // 滚动到元素的顶部
         });
       }
