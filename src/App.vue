@@ -3,50 +3,53 @@ import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
 import { reactive } from 'vue';
 function scrollToElement() {
-      const targetElement = document.getElementById('voting');
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          // behavior: 'smooth', // 使用平滑滚动效果
-          block: 'start',     // 滚动到元素的顶部
-        });
-      }
-    }
+  const targetElement = document.getElementById('voting');
+  if (targetElement) {
+    setTimeout(() => {
+      targetElement.scrollIntoView({
+        behavior: 'smooth', // 使用平滑滚动效果
+        block: 'start',     // 滚动到元素的顶部
+      })
+    }, 50);
 
-const teamList=reactive([
+  }
+}
+
+const teamList = reactive([
   {
     id: 1,
     name: 'Tom',
-    score:12
+    score: 12
   },
   {
     id: 2,
     name: 'Petter',
-    score:12
+    score: 12
   },
   {
     id: 3,
     name: 'Andy',
-    score:12
+    score: 12
   },
   {
     id: 4,
     name: 'Andy',
-    score:12
+    score: 12
   },
   {
     id: 5,
     name: 'Andy',
-    score:12
+    score: 12
   },
   {
     id: 6,
     name: 'Andy',
-    score:12
+    score: 12
   },
 ])
 
-function submit(){
-    console.log(teamList)
+function submit() {
+  console.log(teamList)
 }
 </script>
 
@@ -76,11 +79,8 @@ function submit(){
         <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
           第3届卡猿杯创新大赛公开赛
         </h1>
-        <a
-          href="#"
-          class="block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
-          @click="scrollToElement"
-        >
+        <a href="#" class="block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
+          @click="scrollToElement">
           开始投票
         </a>
       </div>
@@ -91,11 +91,10 @@ function submit(){
     <div class="flex flex-col">
       <h1 id='voting' class="text-3xl font-semibold text-center mt-2 pt-6 pb-6"></h1>
       <List>
-        <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.name" v-model:score="team.score"></ListItem>
+        <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.name"
+          v-model:score="team.score"></ListItem>
       </List>
-      <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white"
-      @click="submit"
-      >
+      <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票
       </button>
     </div>
