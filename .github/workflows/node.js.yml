@@ -38,7 +38,7 @@ jobs:
         # Where to store pnpm files
         # If specified, run `pnpm install`
         run_install: true
-    - run: pnpm run build-website
+    - run: pnpm run build
     - run: |
         echo $PATH
         node -v
