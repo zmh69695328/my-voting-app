@@ -79,7 +79,7 @@ function submit() {
         <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
           第3届卡猿杯创新大赛公开赛
         </h1>
-        <a href="#" class="block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
+        <a href="#" class=" rounded-lg block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
           @click="scrollToElement">
           开始投票
         </a>
