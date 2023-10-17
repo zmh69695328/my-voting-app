@@ -17,10 +17,12 @@ specifiers:
   vite: ^4.4.9
   vitest: ^0.34.4
   vue: ^3.3.4
+  vue-easy-lightbox: ^1.16.0
 
 dependencies:
   pinia: 2.1.6_vue@3.3.4
   vue: 3.3.4
+  vue-easy-lightbox: 1.16.0_vue@3.3.4
 
 devDependencies:
   '@rushstack/eslint-patch': 1.5.1
@@ -2639,6 +2641,15 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+    dependencies:
+      vue: 3.3.4
+    dev: false
+
+  /vue-easy-lightbox/1.16.0_vue@3.3.4:
+    resolution: {integrity: sha512-9ckBIi56kTNkfbxioTBLKR3xnFjmkIs4SOvePn6XUciR+Dzuav0tgNjqDHkfsoo3nxIpUmfpQAT0YDl9TpJ5jA==}
+    engines: {node: '>=14.18.3'}
+    peerDependencies:
+      vue: ^3.0.0
     dependencies:
       vue: 3.3.4
     dev: false

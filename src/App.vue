@@ -18,12 +18,14 @@ function scrollToElement() {
 const teamList = reactive([
   {
     id: 1,
-    name: 'Tom',
+    name: 'AI防火墙',
+    teamName:'智慧队',
     score: 12
   },
   {
     id: 2,
-    name: 'Petter',
+    name: 'AIGC图片生成工具',
+    teamName:'天马行空共赢队',
     score: 12
   },
   {
@@ -92,11 +94,11 @@ function submit() {
       <h1 id='voting' class="text-3xl font-semibold text-center mt-2 pt-6 pb-6"></h1>
       <List>
         <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.name"
-          v-model:score="team.score"></ListItem>
+          v-model:score="team.score" v-model:teamName="team.teamName"></ListItem>
       </List>
-      <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
+      <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票
-      </button>
+      </button> -->
     </div>
   </div>
 </template>
