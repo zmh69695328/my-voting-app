@@ -10,6 +10,7 @@ const props = defineProps({
     name: { type: String, default: undefined },
     score: { type: Number, default: undefined },
     teamName: { type: String, default: undefined },
+    leader: { type: String, default: undefined },
 });
 let inputValue = ref(props.score)
 const isShowWarning = ref(false)
@@ -69,7 +70,7 @@ const onHide = () => (visibleRef.value = false)
                 <h2 class="card-title">{{ id + '. ' + name }}</h2>
                 <p>赛队名：{{ teamName }}</p>
                 <!-- <p>作品名：</p> -->
-                <p>队长：</p>
+                <p>队长：{{ leader }}</p>
                 <div class="card-actions">
                     <div class="flex flex-row w-full">
                         <span class="label-text basis-2/12 text-base">评分：</span>

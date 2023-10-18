@@ -1,7 +1,7 @@
 <script setup>
 import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 function scrollToElement() {
   const targetElement = document.getElementById('voting');
   if (targetElement) {
@@ -13,19 +13,17 @@ function scrollToElement() {
     }, 50);
 
   }
-}
-
-const teamList = reactive([
+} let teamList = reactive([
   {
     id: 1,
     name: 'AI防火墙',
-    teamName:'智慧队',
+    teamName: '智慧队',
     score: 12
   },
   {
     id: 2,
     name: 'AIGC图片生成工具',
-    teamName:'天马行空共赢队',
+    teamName: '天马行空共赢队',
     score: 12
   },
   {
@@ -49,6 +47,25 @@ const teamList = reactive([
     score: 12
   },
 ])
+async function getTeams() {
+
+
+  let response = await fetch('/api/teams', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    }
+  });
+
+  let result = await response.json();
+  console.log(result);
+  teamList.length = 0;
+  teamList.push(...result.teams);
+}
+onMounted(() => {
+  getTeams()
+})
+
 
 function submit() {
   console.log(teamList)
@@ -81,7 +98,8 @@ function submit() {
         <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
           第3届卡猿杯创新大赛公开赛
         </h1>
-        <a href="#" class=" rounded-lg block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
+        <a href="#"
+          class=" rounded-lg block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
           @click="scrollToElement">
           开始投票
         </a>
@@ -93,8 +111,8 @@ function submit() {
     <div class="flex flex-col">
       <h1 id='voting' class="text-3xl font-semibold text-center mt-2 pt-6 pb-6"></h1>
       <List>
-        <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.name"
-          v-model:score="team.score" v-model:teamName="team.teamName"></ListItem>
+        <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.workname"
+          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"></ListItem>
       </List>
       <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票
