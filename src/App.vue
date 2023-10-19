@@ -1,7 +1,12 @@
 <script setup>
 import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
+import CountDown from './components/CountDown.vue'
+import Login from './components/login/Login.vue'
 import { onMounted, reactive } from 'vue';
+function showLogin() {
+  document.getElementById('my_modal_2').showModal();
+}
 function scrollToElement() {
   const targetElement = document.getElementById('voting');
   if (targetElement) {
@@ -73,6 +78,7 @@ function submit() {
 </script>
 
 <template>
+  <Login ref="login"></Login>
   <div class="relative h-screen overflow-hidden bg-indigo-900">
     <img src="/images/6.svg" class="absolute object-cover w-full h-full" />
     <div class="absolute inset-0 bg-black opacity-25"></div>
@@ -80,15 +86,17 @@ function submit() {
       <nav class="container px-6 py-4 mx-auto md:px-12">
         <div class="items-center justify-center md:flex">
           <div class="items-center md:flex">
+            <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
+              登录
+
+            </a>
             <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
               排行榜
             </a>
             <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
               关于
             </a>
-            <!-- <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
-                        Contact
-                    </a> -->
+
           </div>
         </div>
       </nav>
@@ -110,6 +118,7 @@ function submit() {
   <div class="container mx-auto">
     <div class="flex flex-col">
       <h1 id='voting' class="text-3xl font-semibold text-center mt-2 pt-6 pb-6"></h1>
+      <!-- <CountDown></CountDown> -->
       <List>
         <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.workname"
           v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"></ListItem>

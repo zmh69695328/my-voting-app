@@ -2,14 +2,16 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+
 	_ "github.com/mattn/go-sqlite3"
 )
 
 // Task is a struct containing Team data
 type Vote struct {
 	ID     int `json:"id"`
-	TeamID int `json:"teamid"`
 	Score  int `json:"score"`
+	TeamID int `json:"teamid"`
 }
 
 // TaskCollection is collection of Tasks
@@ -44,6 +46,8 @@ type VoteCollection struct {
 // PutTask into DB
 func PutVote(db *sql.DB, teamid int, score int) (int64, error) {
 	// sql := "INSERT INTO tasks(name) VALUES(?)"
+	fmt.Println(teamid, score)
+	// score = 10
 	sql := "INSERT INTO vote(teamid, score) VALUES(?, ?)"
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
@@ -55,7 +59,7 @@ func PutVote(db *sql.DB, teamid int, score int) (int64, error) {
 	defer stmt.Close()
 
 	// Replace the '?' in our prepared statement with 'name'
-	result, err2 := stmt.Exec(score)
+	result, err2 := stmt.Exec(teamid, score)
 	// Exit if we get an error
 	if err2 != nil {
 		panic(err2)

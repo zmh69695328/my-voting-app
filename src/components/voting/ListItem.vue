@@ -14,6 +14,7 @@ const props = defineProps({
 });
 let inputValue = ref(props.score)
 const isShowWarning = ref(false)
+const isShowWarningUnderline = ref(false)
 const emit = defineEmits(['update:score'])
 function handleChange(val) {
     console.log(val)
@@ -23,12 +24,48 @@ function handleBlur() {
     isShowWarning.value = !isBetweenZeroAndTwenty(inputValue.value)
 }
 let showFlag = ref(0)
-function submit() {
-    showFlag.value++
+async function submit() {
+    // 对输入值进行校验，0-20 
+    // validate input
+    if (inputValue.value === '' || !isBetweenZeroAndTwenty(inputValue.value)) {
+        isShowWarning.value = true
+        isShowWarningUnderline.value=true
+        setTimeout(() => {
+            isShowWarningUnderline.value = false
+        },300)
+        return
+    }
     showFlag.value = 1
-    setTimeout(() => {
-        showFlag.value = 2
-    }, 500);
+    // setTimeout(() => {
+    //     showFlag.value = 2
+    // }, 500);
+
+    let req = {
+        teamid: props.id,
+        score: parseInt(inputValue.value)
+    }
+
+    let response = await fetch('/api/vote', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(req)
+    }).catch(error => {
+        showFlag.value = 3
+        console.error('Error:', error)
+    });
+    if (response.status !== 200) {
+        showFlag.value = 3
+        console.log(response)
+    } else {
+        let result = await response.json();
+        console.log(result)
+        setTimeout(() => {
+            showFlag.value = 2
+        }, 200);
+        // showFlag.value = 2
+    }
 }
 const visibleRef = ref(false)
 const indexRef = ref(0)
@@ -83,13 +120,16 @@ const onHide = () => (visibleRef.value = false)
                                 <input type="checkbox" @click.stop.prevent="" checked="checked"
                                     class="checkbox checkbox-success " />
                             </div>
+                            <div v-if="showFlag === 3" class="flex justify-center items-center alert-error">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-8 w-8" fill="none" viewBox="0 0 24 24"><path stroke="white" fill="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            </div>
                         </div>
                         <button class="btn glass basis-3/12  w-6/12 mx-auto text-lg  bg-indigo-900 text-white"
                             @click="submit">
                             投票
                         </button>
                     </div>
-                    <span v-show="isShowWarning" class="text-red-600">请输入正确的值</span>
+                    <span v-show="isShowWarning" class="text-red-600" :class="{underline:isShowWarningUnderline}">请输入正确的值</span>
                 </div>
             </div>
         </div>
