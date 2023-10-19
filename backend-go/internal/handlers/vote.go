@@ -27,7 +27,7 @@ func PutVote(db *sql.DB) echo.HandlerFunc {
 		// Add a task using our new model
 		fmt.Println(vote, c)
 		fmt.Print("1341331141  ", vote.Score, vote.TeamID, vote.ID, "    ")
-		id, err := models.PutVote(db, vote.TeamID, vote.Score)
+		id, err := models.PutVote(db, vote.TeamID, vote.Score, vote.UserName)
 		// Return a JSON response if successful
 		if err == nil {
 			return c.JSON(http.StatusOK, H{

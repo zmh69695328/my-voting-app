@@ -1,11 +1,11 @@
 <script setup>
 import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
-import CountDown from './components/CountDown.vue'
 import Login from './components/login/Login.vue'
-import { onMounted, reactive } from 'vue';
+import { nextTick, onMounted, reactive, ref } from 'vue';
+const login = ref()
 function showLogin() {
-  document.getElementById('my_modal_2').showModal();
+  login.value.showModal = true
 }
 function scrollToElement() {
   const targetElement = document.getElementById('voting');
@@ -121,7 +121,7 @@ function submit() {
       <!-- <CountDown></CountDown> -->
       <List>
         <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.workname"
-          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"></ListItem>
+          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader" :group="team.group"></ListItem>
       </List>
       <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票

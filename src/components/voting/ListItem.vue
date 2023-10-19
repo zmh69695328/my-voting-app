@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { isBetweenZeroAndTwenty } from '../../utils/checkString.js'
 import VueEasyLightbox from 'vue-easy-lightbox'
+import { useUsernameStore } from '@/stores/username.js'
 onMounted(() => {
 
 });
@@ -11,6 +12,7 @@ const props = defineProps({
     score: { type: Number, default: undefined },
     teamName: { type: String, default: undefined },
     leader: { type: String, default: undefined },
+    group: { type: String, default: '' }
 });
 let inputValue = ref(props.score)
 const isShowWarning = ref(false)
@@ -39,10 +41,12 @@ async function submit() {
     // setTimeout(() => {
     //     showFlag.value = 2
     // }, 500);
-
+    const store = useUsernameStore()
+    const username = store.username
     let req = {
         teamid: props.id,
-        score: parseInt(inputValue.value)
+        score: parseInt(inputValue.value),
+        username
     }
 
     let response = await fetch('/api/vote', {
@@ -106,7 +110,7 @@ const onHide = () => (visibleRef.value = false)
             <div class="card-body">
                 <h2 class="card-title">{{ id + '. ' + name }}</h2>
                 <p>赛队名：{{ teamName }}</p>
-                <!-- <p>作品名：</p> -->
+                <p>赛道：{{ group }}</p>
                 <p>队长：{{ leader }}</p>
                 <div class="card-actions">
                     <div class="flex flex-row w-full">

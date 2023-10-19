@@ -9,9 +9,10 @@ import (
 
 // Task is a struct containing Team data
 type Vote struct {
-	ID     int `json:"id"`
-	Score  int `json:"score"`
-	TeamID int `json:"teamid"`
+	ID       int    `json:"id"`
+	Score    int    `json:"score"`
+	TeamID   int    `json:"teamid"`
+	UserName string `json:"username"`
 }
 
 // TaskCollection is collection of Tasks
@@ -44,11 +45,11 @@ type VoteCollection struct {
 // }
 
 // PutTask into DB
-func PutVote(db *sql.DB, teamid int, score int) (int64, error) {
+func PutVote(db *sql.DB, teamid int, score int, username string) (int64, error) {
 	// sql := "INSERT INTO tasks(name) VALUES(?)"
 	fmt.Println(teamid, score)
 	// score = 10
-	sql := "INSERT INTO vote(teamid, score) VALUES(?, ?)"
+	sql := "INSERT INTO vote(teamid, score,username) VALUES(?, ?,?)"
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
 	// Exit if we get an error
@@ -59,7 +60,7 @@ func PutVote(db *sql.DB, teamid int, score int) (int64, error) {
 	defer stmt.Close()
 
 	// Replace the '?' in our prepared statement with 'name'
-	result, err2 := stmt.Exec(teamid, score)
+	result, err2 := stmt.Exec(teamid, score, username)
 	// Exit if we get an error
 	if err2 != nil {
 		panic(err2)
