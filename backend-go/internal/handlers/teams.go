@@ -28,7 +28,7 @@ func GetTeams(db *sql.DB) echo.HandlerFunc {
 
 var (
 	accessKey = "i4WWJT4W9x0ZPlexzhA1c-RnPABnLWDo0RPpo66o"
-	secretKey = "j8uFwArEwJXuEMdPEcmKAVdxqXzidOmNAL05U3KA"
+	secretKey = "j8uFwArEwJXuEMdPEcmKAVdxqXzidOmNAL05U3K"
 	bucket    = "zmhtmp"
 )
 
