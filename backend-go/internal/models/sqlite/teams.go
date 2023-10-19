@@ -13,6 +13,7 @@ type Team struct {
 	Order    string `json:"order"`
 	Group    string `json:"group"`
 	Leader   string `json:"leader"`
+	ImageUrl string
 }
 
 // TaskCollection is collection of Tasks

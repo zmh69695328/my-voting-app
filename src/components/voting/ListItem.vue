@@ -12,7 +12,8 @@ const props = defineProps({
     score: { type: Number, default: undefined },
     teamName: { type: String, default: undefined },
     leader: { type: String, default: undefined },
-    group: { type: String, default: '' }
+    group: { type: String, default: '' },
+    ImageUrl: { type: String, default: '/teams/team1.png' }
 });
 let inputValue = ref(props.score)
 const isShowWarning = ref(false)
@@ -101,7 +102,8 @@ const onHide = () => (visibleRef.value = false)
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
 
-                <img src="/teams/team1.png" @click="showSingle" alt="Shoes" />
+                <!-- <img src="/teams/team1.png" @click="showSingle" alt="Shoes" /> -->
+                <img :src="ImageUrl" @click="showSingle"/>
                 <!-- <div :class="classes">
                     <img src="/teams/team1.png" alt="" title="" />
                     <a href="teams/team1.png"><img src="teams/team1.png" alt="" title="Beautiful Image"/></a>

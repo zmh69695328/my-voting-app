@@ -2,11 +2,15 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/zmh69695328/voting-backend-go/internal/models/sqlite"
 
 	"github.com/labstack/echo/v4"
+	"github.com/qiniu/go-sdk/v7/auth"
+	"github.com/qiniu/go-sdk/v7/storage"
 )
 
 type H map[string]interface{}
@@ -14,8 +18,37 @@ type H map[string]interface{}
 // GetTasks endpoint
 func GetTeams(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		return c.JSON(http.StatusOK, models.GetTeams(db))
+		var teams models.TeamCollection = models.GetTeams(db)
+		for i := 0; i < len(teams.Teams); i++ {
+			teams.Teams[i].ImageUrl = getImageUrl(teams.Teams[i].ID)
+		}
+		return c.JSON(http.StatusOK, teams)
 	}
+}
+
+var (
+	accessKey = "i4WWJT4W9x0ZPlexzhA1c-RnPABnLWDo0RPpo66o"
+	secretKey = "j8uFwArEwJXuEMdPEcmKAVdxqXzidOmNAL05U3KA"
+	bucket    = "zmhtmp"
+)
+
+func getImageUrl(id int) string {
+	// const downloadUrl = "http://s2nuoazh3.bkt.clouddn.com/work" + fmt.Sprint(id) + ".png"
+	mac := auth.New(accessKey, secretKey)
+
+	// 公开空间访问
+	// domain := "http://s2nuoazh3.bkt.clouddn.com"
+	// key := "work"+fmt.Sprint(id) + ".png"
+	// publicAccessURL := storage.MakePublicURL(domain, key)
+	// fmt.Println(publicAccessURL)
+
+	// 私有空间访问
+	domain := "http://s2nuoazh3.bkt.clouddn.com"
+	key := "work" + fmt.Sprint(id) + ".png"
+	deadline := time.Now().Add(time.Second * 300).Unix() //1小时有效期
+	privateAccessURL := storage.MakePrivateURL(mac, domain, key, deadline)
+	fmt.Println(privateAccessURL)
+	return privateAccessURL
 }
 
 // PutTask endpoint

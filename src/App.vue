@@ -117,11 +117,14 @@ function submit() {
 
   <div class="container mx-auto">
     <div class="flex flex-col">
-      <h1 id='voting' class="text-3xl font-semibold text-center mt-2 pt-6 pb-6"></h1>
+      <h3 id='voting' class="text-lg font-semibold mt-2 pt-6 pb-1">
+        提示：点击图片即可放大观看
+      </h3>
       <!-- <CountDown></CountDown> -->
+      <h1 class="text-lg font-semibold">投票情况：</h1>
       <List>
         <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.workname"
-          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader" :group="team.group"></ListItem>
+          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader" :group="team.group" :ImageUrl="team.ImageUrl"></ListItem>
       </List>
       <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票
