@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick } from 'vue';
 import { isBetweenZeroAndTwenty } from '../../utils/checkString.js'
 import VueEasyLightbox from 'vue-easy-lightbox'
 import { useUsernameStore } from '@/stores/username.js'
@@ -16,9 +16,10 @@ const props = defineProps({
     ImageUrl: { type: String, default: '/teams/team1.png' }
 });
 let inputValue = ref(props.score)
+let showMessage=ref(false)
 const isShowWarning = ref(false)
 const isShowWarningUnderline = ref(false)
-const emit = defineEmits(['update:score'])
+const emit = defineEmits(['update:score','login'])
 function handleChange(val) {
     console.log(val)
     emit('update:score', inputValue.value)
@@ -28,21 +29,31 @@ function handleBlur() {
 }
 let showFlag = ref(0)
 async function submit() {
+    const store = useUsernameStore()
+    // check if login
+    if(store.username === ''|| store.username === undefined){
+        showMessage.value=true
+        setTimeout(() => {
+            showMessage.value=false
+        }, 1000)
+        emit('login')
+        return;
+    }
     // 对输入值进行校验，0-20 
     // validate input
     if (inputValue.value === '' || !isBetweenZeroAndTwenty(inputValue.value)) {
         isShowWarning.value = true
-        isShowWarningUnderline.value=true
+        isShowWarningUnderline.value = true
         setTimeout(() => {
             isShowWarningUnderline.value = false
-        },300)
+        }, 300)
         return
     }
     showFlag.value = 1
     // setTimeout(() => {
     //     showFlag.value = 2
     // }, 500);
-    const store = useUsernameStore()
+    
     const username = store.username
     let req = {
         teamid: props.id,
@@ -83,7 +94,7 @@ const onShow = () => {
     visibleRef.value = true
 }
 const showSingle = () => {
-    imgsRef.value = 'teams/team1.png'
+    imgsRef.value = props.ImageUrl
     // or
     // imgsRef.value  = {
     //   title: 'this is a placeholder',
@@ -96,14 +107,18 @@ const onHide = () => (visibleRef.value = false)
 
 <template>
     <vue-easy-lightbox :visible="visibleRef" :imgs="imgsRef" :index="indexRef" @hide="onHide">
-
     </vue-easy-lightbox>
+    <div class="toast z-50" v-show="showMessage"> 
+        <div class="alert alert-info">
+            <span>请先登录！</span>
+        </div>
+    </div>
     <div class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
 
                 <!-- <img src="/teams/team1.png" @click="showSingle" alt="Shoes" /> -->
-                <img :src="ImageUrl" @click="showSingle"/>
+                <img :src="ImageUrl" @click="showSingle" />
                 <!-- <div :class="classes">
                     <img src="/teams/team1.png" alt="" title="" />
                     <a href="teams/team1.png"><img src="teams/team1.png" alt="" title="Beautiful Image"/></a>
@@ -127,7 +142,12 @@ const onHide = () => (visibleRef.value = false)
                                     class="checkbox checkbox-success " />
                             </div>
                             <div v-if="showFlag === 3" class="flex justify-center items-center alert-error">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-8 w-8" fill="none" viewBox="0 0 24 24"><path stroke="white" fill="red" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-8 w-8" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="white" fill="red" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
                             </div>
                         </div>
                         <button class="btn glass basis-3/12  w-6/12 mx-auto text-lg  bg-indigo-900 text-white"
@@ -135,11 +155,11 @@ const onHide = () => (visibleRef.value = false)
                             投票
                         </button>
                     </div>
-                    <span v-show="isShowWarning" class="text-red-600" :class="{underline:isShowWarningUnderline}">请输入正确的值</span>
+                    <span v-show="isShowWarning" class="text-red-600"
+                        :class="{ underline: isShowWarningUnderline }">请输入正确的值</span>
                 </div>
             </div>
         </div>
-    </div>
-</template>
+</div></template>
 
 <style scoped></style>

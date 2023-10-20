@@ -18,40 +18,7 @@ function scrollToElement() {
     }, 50);
 
   }
-} let teamList = reactive([
-  {
-    id: 1,
-    name: 'AI防火墙',
-    teamName: '智慧队',
-    score: 12
-  },
-  {
-    id: 2,
-    name: 'AIGC图片生成工具',
-    teamName: '天马行空共赢队',
-    score: 12
-  },
-  {
-    id: 3,
-    name: 'Andy',
-    score: 12
-  },
-  {
-    id: 4,
-    name: 'Andy',
-    score: 12
-  },
-  {
-    id: 5,
-    name: 'Andy',
-    score: 12
-  },
-  {
-    id: 6,
-    name: 'Andy',
-    score: 12
-  },
-])
+} let teamList = reactive([])
 async function getTeams() {
 
 
@@ -123,7 +90,7 @@ function submit() {
       <!-- <CountDown></CountDown> -->
       <h1 class="text-lg font-semibold">投票情况：</h1>
       <List>
-        <ListItem v-for="team in teamList" :key="team.id" v-model:id="team.id" v-model:name="team.workname"
+        <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id" v-model:name="team.workname"
           v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader" :group="team.group" :ImageUrl="team.ImageUrl"></ListItem>
       </List>
       <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
