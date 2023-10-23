@@ -27,8 +27,8 @@ func GetTeams(db *sql.DB) echo.HandlerFunc {
 }
 
 var (
-	accessKey = "i4WWJT4W9x0ZPlexzhA1c-RnPABnLWDo0RPpo66o"
-	secretKey = "j8uFwArEwJXuEMdPEcmKAVdxqXzidOmNAL05U3K"
+	accessKey = "bILga2f-6hoM1r4ZdMoSGRBbvIUtFGMfH7QtTZT8"
+	secretKey = "VUD4a0ht_bdEK8MKNaWZ_IORcwPf2s7T23WnM6kO"
 	bucket    = "zmhtmp"
 )
 
@@ -45,7 +45,7 @@ func getImageUrl(id int) string {
 	// 私有空间访问
 	domain := "http://s2nuoazh3.bkt.clouddn.com"
 	key := "work" + fmt.Sprint(id) + ".png"
-	deadline := time.Now().Add(time.Second * 300).Unix() //1小时有效期
+	deadline := time.Now().Add(time.Second * 3600).Unix() //1小时有效期
 	privateAccessURL := storage.MakePrivateURL(mac, domain, key, deadline)
 	fmt.Println(privateAccessURL)
 	return privateAccessURL

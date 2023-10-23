@@ -26,7 +26,7 @@ func PutVote(db *sql.DB) echo.HandlerFunc {
 		c.Bind(&vote)
 		// Add a task using our new model
 		fmt.Println(vote, c)
-		fmt.Print("1341331141  ", vote.Score, vote.TeamID, vote.ID, "    ")
+		fmt.Println("投票记录：", vote.Score, vote.TeamID, vote.ID)
 		id, err := models.PutVote(db, vote.TeamID, vote.Score, vote.UserName)
 		// Return a JSON response if successful
 		if err == nil {
@@ -37,5 +37,15 @@ func PutVote(db *sql.DB) echo.HandlerFunc {
 		} else {
 			return err
 		}
+	}
+}
+
+func GetRanking(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var rank models.Rank
+		c.Bind(&rank)
+		ranks := models.GetRanking(db, rank.Group)
+		// Return a JSON response if successful
+		return c.JSON(http.StatusOK, ranks)
 	}
 }

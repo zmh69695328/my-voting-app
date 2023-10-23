@@ -2,12 +2,20 @@
 import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
 import Login from './components/login/Login.vue'
+import Ranking from './components/ranking/Ranking.vue'
 import { nextTick, onMounted, reactive, ref } from 'vue';
+import { useUsernameStore } from '@/stores/username.js'
+const showtabs=ref(2) //1是投票页，2是排行榜页
 const login = ref()
 function showLogin() {
   login.value.showModal = true
 }
+const store = useUsernameStore()
 function scrollToElement() {
+  
+  if(store.username === ''|| store.username === undefined){
+        showLogin()
+    }
   const targetElement = document.getElementById('voting');
   if (targetElement) {
     setTimeout(() => {
@@ -15,7 +23,7 @@ function scrollToElement() {
         behavior: 'smooth', // 使用平滑滚动效果
         block: 'start',     // 滚动到元素的顶部
       })
-    }, 50);
+    }, 10);
 
   }
 } let teamList = reactive([])
@@ -46,18 +54,25 @@ function submit() {
 
 <template>
   <Login ref="login"></Login>
-  <div class="relative h-screen overflow-hidden bg-indigo-900">
-    <img src="/images/6.svg" class="absolute object-cover w-full h-full" />
+  <div class="relative h-screen bg-indigo-900" :class="{ 'fullscreen': showtabs === 2 }">
+    <img v-if="showtabs === 1" src="/images/6.svg" class="absolute object-cover w-full h-full" />
+    <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-[80rem]" /> -->
+    <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-screen" /> -->
     <div class="absolute inset-0 bg-black opacity-25"></div>
     <header class="absolute top-0 left-0 right-0 z-20">
       <nav class="container px-6 py-4 mx-auto md:px-12">
         <div class="items-center justify-center md:flex">
           <div class="items-center md:flex">
-            <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
+            <a v-if="store.username === ''|| store.username === undefined" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
               登录
-
             </a>
-            <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+            <a v-else class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
+              {{ store.username }}
+            </a>
+            <a @click="showtabs = 1" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+              首页
+            </a>
+            <a @click="showtabs = 2" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
               排行榜
             </a>
             <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
@@ -68,7 +83,7 @@ function submit() {
         </div>
       </nav>
     </header>
-    <div class="container relative z-10 flex items-center px-6 py-32 mx-auto md:px-12 xl:py-40">
+    <div v-if="showtabs === 1" class="container relative z-10 flex items-center px-6 py-32 mx-auto md:px-12 xl:py-40">
       <div class="relative z-10 flex flex-col items-center w-full">
         <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
           第3届卡猿杯创新大赛公开赛
@@ -80,9 +95,14 @@ function submit() {
         </a>
       </div>
     </div>
+    <div v-if="showtabs === 2" class=" absolute top-16 w-full">
+      <Ranking group="人工智能"></Ranking>
+      <Ranking group="数据赋能"></Ranking>
+      <Ranking group="融合创新"></Ranking>
+    </div>
   </div>
 
-  <div class="container mx-auto">
+  <div v-if="showtabs === 1" class="container mx-auto">
     <div class="flex flex-col">
       <h3 id='voting' class="text-lg font-semibold mt-2 pt-6 pb-1">
         提示：点击图片即可放大观看
@@ -100,4 +120,9 @@ function submit() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.fullscreen {
+  background-image: url("/images/6.svg");
+  height: 200vh;
+}
+</style>
