@@ -3,19 +3,20 @@ import List from './components/voting/List.vue'
 import ListItem from './components/voting/ListItem.vue'
 import Login from './components/login/Login.vue'
 import Ranking from './components/ranking/Ranking.vue'
-import { nextTick, onMounted, reactive, ref } from 'vue';
+import { nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { useUsernameStore } from '@/stores/username.js'
-const showtabs=ref(2) //1是投票页，2是排行榜页
+import Steps from '@/components/Steps.vue'
+const showtabs = ref(1) //1是投票页，2是排行榜页
 const login = ref()
 function showLogin() {
   login.value.showModal = true
 }
 const store = useUsernameStore()
 function scrollToElement() {
-  
-  if(store.username === ''|| store.username === undefined){
-        showLogin()
-    }
+
+  if (store.username === '' || store.username === undefined) {
+    showLogin()
+  }
   const targetElement = document.getElementById('voting');
   if (targetElement) {
     setTimeout(() => {
@@ -42,19 +43,71 @@ async function getTeams() {
   teamList.length = 0;
   teamList.push(...result.teams);
 }
-onMounted(() => {
-  getTeams()
+
+// 计算子元素的高度 
+function getHeights() {
+  nextTick(() => {
+    const container = document.querySelector('#container');
+    const ranking = document.querySelector('#ranking');
+    console.log(ranking.offsetHeight)
+    container.style.height = ranking.offsetHeight + 100 + 'px';
+  })
+}
+onMounted(async () => {
+  await getTeams()
+  if (showtabs.value === 2) {
+    getHeights()
+  }
+  if(store.username !== '' && store.username !== undefined){
+    getTeamVotesList()
+  }
+})
+watch(showtabs, async () => {
+  // await getTeams()
+  if (showtabs.value === 1) {
+    nextTick(() => {
+      const container = document.querySelector('#container');
+      container.style.cssText = ''
+    })
+  }
 })
 
 
-function submit() {
-  console.log(teamList)
+const teamVotesList = reactive([])
+async function getTeamVotesList() {
+
+  let req = {
+    username: store.username
+  }
+
+  let response = await fetch('/api/teamvotes', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(req)
+  }).catch(error => {
+    console.error('Error:', error)
+  })
+  if (response.status === 200) {
+    teamVotesList.length = 0;
+    let result = await response.json();
+    teamVotesList.push(...result.teamvotes);
+    teamList.forEach((team,index) => {
+      if(team.id===result.teamvotes[index].id){
+        team.score=result.teamvotes[index].score
+      }
+    })
+  }
+}
+async function submit() {
+  getTeamVotesList()
 }
 </script>
 
 <template>
   <Login ref="login"></Login>
-  <div class="relative h-screen bg-indigo-900" :class="{ 'fullscreen': showtabs === 2 }">
+  <div id="container" class="relative h-screen bg-indigo-900" :class="{ 'fullscreen': showtabs === 2 }">
     <img v-if="showtabs === 1" src="/images/6.svg" class="absolute object-cover w-full h-full" />
     <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-[80rem]" /> -->
     <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-screen" /> -->
@@ -63,16 +116,20 @@ function submit() {
       <nav class="container px-6 py-4 mx-auto md:px-12">
         <div class="items-center justify-center md:flex">
           <div class="items-center md:flex">
-            <a v-if="store.username === ''|| store.username === undefined" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
+            <div v-if="store.username === '' || store.username === undefined"
+              class="inline-block mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 "
+              @click="showLogin">
               登录
-            </a>
-            <a v-else class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 " @click="showLogin">
+            </div>
+            <div v-else class="inline-block mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 "
+              @click="showLogin">
               {{ store.username }}
-            </a>
+            </div>
             <a @click="showtabs = 1" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
               首页
             </a>
-            <a @click="showtabs = 2" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+            <a v-if="store.username === '黄素梅'" @click="showtabs = 2"
+              class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
               排行榜
             </a>
             <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
@@ -95,10 +152,10 @@ function submit() {
         </a>
       </div>
     </div>
-    <div v-if="showtabs === 2" class=" absolute top-16 w-full">
-      <Ranking group="人工智能"></Ranking>
-      <Ranking group="数据赋能"></Ranking>
-      <Ranking group="融合创新"></Ranking>
+    <div id="ranking" v-if="showtabs === 2" class=" absolute top-16 w-full">
+      <Ranking @hasMounted="getHeights" group="人工智能"></Ranking>
+      <Ranking @hasMounted="getHeights" group="数据赋能"></Ranking>
+      <Ranking @hasMounted="getHeights" group="融合创新"></Ranking>
     </div>
   </div>
 
@@ -108,10 +165,12 @@ function submit() {
         提示：点击图片即可放大观看
       </h3>
       <!-- <CountDown></CountDown> -->
-      <h1 class="text-lg font-semibold">投票情况：</h1>
+      <!-- <h1 class="text-lg font-semibold">投票情况：</h1> -->
+      <Steps :teamVotesList="teamVotesList"></Steps>
       <List>
-        <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id" v-model:name="team.workname"
-          v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader" :group="team.group" :ImageUrl="team.ImageUrl"></ListItem>
+        <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"
+          v-model:name="team.workname" v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"
+          :group="team.group" :ImageUrl="team.ImageUrl" @submit="submit"></ListItem>
       </List>
       <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
         投票
@@ -122,7 +181,13 @@ function submit() {
 
 <style scoped>
 .fullscreen {
-  background-image: url("/images/6.svg");
-  height: 200vh;
-}
-</style>
+  /* background-image: url("/images/6.svg"); */
+  background-image: url('/images/6.svg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  /* overflow: hidden; */
+}</style>

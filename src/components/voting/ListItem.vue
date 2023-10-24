@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed, nextTick } from 'vue';
+import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import { isBetweenZeroAndTwenty } from '../../utils/checkString.js'
 import VueEasyLightbox from 'vue-easy-lightbox'
 import { useUsernameStore } from '@/stores/username.js'
@@ -16,10 +16,17 @@ const props = defineProps({
     ImageUrl: { type: String, default: '/teams/team1.png' }
 });
 let inputValue = ref(props.score)
+watch(() => props.score, (newVal) => {
+    console.log('1111',newVal)
+    if(props.score!==undefined&&props.score!==null){
+    showFlag.value=2
+}
+    inputValue.value = newVal
+})
 let showMessage=ref(false)
 const isShowWarning = ref(false)
 const isShowWarningUnderline = ref(false)
-const emit = defineEmits(['update:score','login'])
+const emit = defineEmits(['update:score','login','submit'])
 function handleChange(val) {
     console.log(val)
     emit('update:score', inputValue.value)
@@ -28,6 +35,7 @@ function handleBlur() {
     isShowWarning.value = !isBetweenZeroAndTwenty(inputValue.value)
 }
 let showFlag = ref(0)
+
 async function submit() {
     const store = useUsernameStore()
     // check if login
@@ -79,6 +87,7 @@ async function submit() {
         console.log(result)
         setTimeout(() => {
             showFlag.value = 2
+            emit('submit')
         }, 200);
         // showFlag.value = 2
     }

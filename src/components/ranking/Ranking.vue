@@ -7,6 +7,7 @@ const props = defineProps({
     }
 })
 const rankList = ref([])
+const emit = defineEmits(['hasMounted'])
 onMounted(async () => {
     let req = {
         group: props.group
@@ -27,6 +28,7 @@ onMounted(async () => {
         let result = await response.json();
         rankList.value=result.ranks
         console.log(result)
+        emit('hasMounted')
     }
 })
 </script>

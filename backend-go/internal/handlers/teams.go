@@ -26,6 +26,16 @@ func GetTeams(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
+func GetTeamVotes(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var vote models.TeamVotes
+		// Map imcoming JSON body to the new Task
+		c.Bind(&vote)
+		var teams models.TeamVotesCollection = models.GetTeamsVotesByUsername(db, vote.UserName)
+		return c.JSON(http.StatusOK, teams)
+	}
+}
+
 var (
 	accessKey = "bILga2f-6hoM1r4ZdMoSGRBbvIUtFGMfH7QtTZT8"
 	secretKey = "VUD4a0ht_bdEK8MKNaWZ_IORcwPf2s7T23WnM6kO"

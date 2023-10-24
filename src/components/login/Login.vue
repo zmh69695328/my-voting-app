@@ -35,10 +35,11 @@ const showModal = ref(false)
 defineExpose({
     showModal
 })
+const store = useUsernameStore()
 let username = ref('')
 function login() {
-    const store = useUsernameStore()
     store.username = username.value
+    sessionStorage.setItem('username', username.value)
     showModal.value = false
 }
 </script>
