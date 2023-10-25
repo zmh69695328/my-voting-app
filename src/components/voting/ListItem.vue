@@ -13,20 +13,26 @@ const props = defineProps({
     teamName: { type: String, default: undefined },
     leader: { type: String, default: undefined },
     group: { type: String, default: '' },
-    ImageUrl: { type: String, default: '/teams/team1.png' }
+    ImageUrl: { type: String, default: '/teams/team1.png' },
+    selectGroup: { type: Number, default: 0 }
 });
 let inputValue = ref(props.score)
-watch(() => props.score, (newVal) => {
-    console.log('1111',newVal)
-    if(props.score!==undefined&&props.score!==null){
-    showFlag.value=2
+const selectGroupMap={
+    1:'人工智能',
+    2:'数据赋能',
+    3:'融合创新',
 }
+watch(() => props.score, (newVal) => {
+    // console.log('1111', newVal)
+    if (props.score !== undefined && props.score !== null&&isBetweenZeroAndTwenty(props.score)&&props.score!=='') {
+        showFlag.value = 2
+    }
     inputValue.value = newVal
 })
-let showMessage=ref(false)
+let showMessage = ref(false)
 const isShowWarning = ref(false)
 const isShowWarningUnderline = ref(false)
-const emit = defineEmits(['update:score','login','submit'])
+const emit = defineEmits(['update:score', 'login', 'submit'])
 function handleChange(val) {
     console.log(val)
     emit('update:score', inputValue.value)
@@ -39,10 +45,10 @@ let showFlag = ref(0)
 async function submit() {
     const store = useUsernameStore()
     // check if login
-    if(store.username === ''|| store.username === undefined){
-        showMessage.value=true
+    if (store.username === '' || store.username === undefined) {
+        showMessage.value = true
         setTimeout(() => {
-            showMessage.value=false
+            showMessage.value = false
         }, 1000)
         emit('login')
         return;
@@ -61,7 +67,7 @@ async function submit() {
     // setTimeout(() => {
     //     showFlag.value = 2
     // }, 500);
-    
+
     const username = store.username
     let req = {
         teamid: props.id,
@@ -117,12 +123,12 @@ const onHide = () => (visibleRef.value = false)
 <template>
     <vue-easy-lightbox :visible="visibleRef" :imgs="imgsRef" :index="indexRef" @hide="onHide">
     </vue-easy-lightbox>
-    <div class="toast z-50" v-show="showMessage"> 
+    <div class="toast z-50" v-show="showMessage">
         <div class="alert alert-info">
             <span>请先登录！</span>
         </div>
     </div>
-    <div class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
+    <div v-show="selectGroup===0||selectGroupMap[selectGroup]===group" class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
 
@@ -169,6 +175,7 @@ const onHide = () => (visibleRef.value = false)
                 </div>
             </div>
         </div>
-</div></template>
+    </div>
+</template>
 
 <style scoped></style>

@@ -12,7 +12,7 @@ const props = defineProps({
             <!-- <li class="step">start</li>
             <li class="step step-secondary">2</li>
             <li class="step step-secondary">3</li> -->
-            <li v-for="item in props.teamVotesList" :key="item.id" class="step" :class="{ 'step-info': item.score!==undefined&&item.score!==null }">{{ item.id }}</li>
+            <li v-for="item in props.teamVotesList" :key="item.id" class="step" :class="{ 'step-info': item.score!==undefined&&item.score!==null }">{{ item.teamname }}</li>
 
         </ul>
     </div>
