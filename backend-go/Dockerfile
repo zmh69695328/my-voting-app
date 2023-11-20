@@ -12,7 +12,8 @@ RUN go mod download
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/engine/reference/builder/#copy
 COPY *.go ./
-
+# 设置 Go 代理
+RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 # Build
 RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go
 
