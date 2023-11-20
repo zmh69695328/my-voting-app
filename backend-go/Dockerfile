@@ -18,6 +18,7 @@ RUN go mod download
 COPY *.go ./
 
 # Build
+RUN ls -al
 RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go
 
 # Optional:
