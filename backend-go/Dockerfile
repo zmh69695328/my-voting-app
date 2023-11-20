@@ -5,9 +5,10 @@ FROM golang:1.20.11
 # Set destination for COPY
 WORKDIR /app
 
-# 设置 Go 代理
-RUN go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/,direct
 
+# 设置 Go 代理
+#RUN go env -w GOPROXY=https://goproxy.io,direct
+ENV GOPROXY=https://goproxy.io,direct
 # Download Go modules
 COPY go.mod go.sum ./
 RUN go mod download
@@ -17,7 +18,7 @@ RUN go mod download
 COPY *.go ./
 
 # Build
-RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go
+RUN CGO_ENABLED=1 GOOS=linux go build /cmd/api-server/main.go -o /docker-voting-go
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
