@@ -15,11 +15,11 @@ RUN go mod download
 
 # Copy the source code. Note the slash at the end, as explained in
 # https://docs.docker.com/engine/reference/builder/#copy
-COPY *.go ./
+COPY . .
 
 # Build
 RUN ls -al
-RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go
+RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go cmd/api-server/main.go
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
