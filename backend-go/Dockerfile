@@ -18,7 +18,7 @@ RUN go mod download
 COPY *.go ./
 
 # Build
-RUN CGO_ENABLED=1 GOOS=linux go build /cmd/api-server/main.go -o /docker-voting-go
+RUN CGO_ENABLED=1 GOOS=linux go build cmd/api-server/main.go -o /docker-voting-go
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
