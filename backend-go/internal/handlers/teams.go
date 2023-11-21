@@ -53,7 +53,7 @@ func getImageUrl(id int) string {
 	// fmt.Println(publicAccessURL)
 
 	// 私有空间访问
-	domain := "http://s2nuoazh3.bkt.clouddn.com"
+	domain := "https://www.qiniu.zhuminhao.top"
 	key := "work" + fmt.Sprint(id) + ".png"
 	deadline := time.Now().Add(time.Second * 86400).Unix() //1天有效期
 	privateAccessURL := storage.MakePrivateURL(mac, domain, key, deadline)

@@ -196,7 +196,7 @@ const unvoted3 = computed(() => {
 <template>
     <Login ref="login" @login="submit"></Login>
     <div id="container" class="relative h-screen bg-indigo-900" :class="{ 'fullscreen': showtabs === 2 }">
-        <img v-if="showtabs === 1" src="http://s32m14foq.bkt.clouddn.com/6.svg"
+        <img v-if="showtabs === 1" src="https://www.qiniu.public.zhuminhao.top/6.svg"
             class="absolute object-cover w-full h-full" />
         <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-[80rem]" /> -->
         <!-- <img v-if="showtabs === 2" src="/images/6.svg" class="absolute object-cover w-full h-screen" /> -->
