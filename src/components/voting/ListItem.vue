@@ -131,13 +131,7 @@ const onHide = () => (visibleRef.value = false)
     <div v-show="selectGroup===0||selectGroupMap[selectGroup]===group" class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
-
-                <!-- <img src="/teams/team1.png" @click="showSingle" alt="Shoes" /> -->
-                <img :src="ImageUrl" @click="showSingle" />
-                <!-- <div :class="classes">
-                    <img src="/teams/team1.png" alt="" title="" />
-                    <a href="teams/team1.png"><img src="teams/team1.png" alt="" title="Beautiful Image"/></a>
-                </div> -->
+                <!-- <img :src="ImageUrl" @click="showSingle" /> -->
             </figure>
             <div class="card-body">
                 <h2 class="card-title">{{ id + '. ' + name }}</h2>

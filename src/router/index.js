@@ -2,12 +2,14 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import App from '@/App.vue'
+import Layout from '@/views/Layout.vue'
 import Home from '@/views/Home.vue'
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'Layout',
+    component: Layout,
+    redirect: '/home',
     children: [
       // Add your routes here
       {
@@ -25,14 +27,22 @@ const routes = [
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Round2.vue')
+      },
+      {
+        path: '/home',
+        name: 'Home',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: Home
       }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory('/voting'),
-  base: '/voting',
+  history: createWebHistory('/'),
+  base: '/',
   routes
 })
 

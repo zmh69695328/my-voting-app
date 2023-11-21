@@ -13,7 +13,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base:'/voting/',
+  // base:'/voting/',
   server:{
     proxy:{
       '/api': {
