@@ -23,22 +23,7 @@ function showLogin() {
     login.value.showModal = true
 }
 const store = useUsernameStore()
-function scrollToElement() {
 
-    if (store.username === '' || store.username === undefined) {
-        showLogin()
-    }
-    const targetElement = document.getElementById('voting');
-    if (targetElement) {
-        setTimeout(() => {
-            targetElement.scrollIntoView({
-                behavior: 'smooth', // 使用平滑滚动效果
-                block: 'start',     // 滚动到元素的顶部
-            })
-        }, 10);
-
-    }
-}
 function scrollToSteps() {
     const targetElement = document.querySelector('.steps');
     if (targetElement) {
@@ -65,26 +50,7 @@ function checkScroll() {
     }
 }
 
-let teamList = reactive([])
-async function getTeams() {
 
-
-    let response = await fetch('/api/teams', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        }
-    });
-    try {
-        let result = await response?.json();
-        console.log(result);
-        teamList.length = 0;
-        teamList.push(...result.teams);
-    } catch (error) {
-        console.error('Error:', error)
-    }
-
-}
 
 // 计算子元素的高度 
 function getHeights() {
@@ -95,15 +61,7 @@ function getHeights() {
         container.style.height = ranking.offsetHeight + 100 + 'px';
     })
 }
-onMounted(async () => {
-    await getTeams()
-    if (showtabs.value === 2) {
-        getHeights()
-    }
-    if (store.username !== '' && store.username !== undefined) {
-        getTeamVotesList()
-    }
-})
+
 watch(showtabs, async () => {
     // await getTeams()
     if (showtabs.value === 1) {
@@ -113,83 +71,6 @@ watch(showtabs, async () => {
         })
     }
 })
-
-
-const teamVotesList = reactive([])
-async function getTeamVotesList() {
-
-    let req = {
-        username: store.username
-    }
-
-    let response = await fetch('/api/teamvotes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(req)
-    }).catch(error => {
-        console.error('Error:', error)
-    })
-    if (response.status === 200) {
-        teamVotesList.length = 0;
-        let result = await response.json();
-        teamVotesList.push(...result.teamvotes);
-        teamList.forEach((team, index) => {
-            if (team.id === result.teamvotes[index].id) {
-                team.score = result.teamvotes[index].score
-            }
-        })
-    }
-}
-async function submit() {
-    getTeamVotesList()
-}
-
-const unvoted1 = computed(() => {
-    if (teamVotesList.length === 0) {
-        return ''
-    } else {
-        return teamList.map((team, index) => {
-            if ((team.group === '人工智能' && team.id === teamVotesList[index].id) && (team.score === undefined || team.score === null)) {
-                return team.teamname
-            } else {
-                return ''
-            }
-        }).filter(item => item !== '').join(',')
-    }
-
-})
-const unvoted2 = computed(() => {
-    if (teamVotesList.length === 0) {
-        return ''
-    } else {
-        return teamList.map((team, index) => {
-            if ((team.group === '数据赋能' && team.id === teamVotesList[index].id) && (team.score === undefined || team.score === null)) {
-                return team.teamname
-            } else {
-                return ''
-            }
-        }).filter(item => item !== '').join(',')
-    }
-
-})
-const unvoted3 = computed(() => {
-    if (teamVotesList.length === 0) {
-        return ''
-    } else {
-        return teamList.map((team, index) => {
-            if ((team.group === '融合创新' && team.id === teamVotesList[index].id) && (team.score === undefined || team.score === null)) {
-                return team.teamname
-            } else {
-                return ''
-            }
-        }).filter(item => item !== '').join(',')
-    }
-
-})
-// const unvoted2 = computed(() => `${firstName.value} ${lastName.value}`)
-// const unvoted3 = computed(() => `${firstName.value} ${lastName.value}`)
 
 </script>
 
@@ -215,7 +96,7 @@ const unvoted3 = computed(() => {
                             @click="showLogin">
                             {{ store.username }}
                         </div>
-                        <a @click="showtabs = 1"
+                        <a @click="showtabs = 1;$router.push('/home')"
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             首页
                         </a>
@@ -231,7 +112,7 @@ const unvoted3 = computed(() => {
                 </div>
             </nav>
         </header>
-        <div v-if="showtabs === 1" class="container relative z-10 flex items-center px-6 py-32 mx-auto md:px-12 xl:py-40">
+        <div class="container relative z-10 flex items-center px-6 py-32 mx-auto md:px-12 xl:py-40">
             <div class="relative z-10 flex flex-col items-center w-full">
                 <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
                     第5届卡猿杯创新大赛公开赛

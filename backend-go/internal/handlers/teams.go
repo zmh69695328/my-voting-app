@@ -26,6 +26,19 @@ func GetTeams(db *sql.DB) echo.HandlerFunc {
 	}
 }
 
+func GetTeamsByGroup(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var team models.Team
+		// Map imcoming JSON body to the new Task
+		c.Bind(&team)
+		var teams models.TeamCollection = models.GetTeamsByGroup(db, team.Group)
+		for i := 0; i < len(teams.Teams); i++ {
+			teams.Teams[i].ImageUrl = getImageUrl(teams.Teams[i].ID)
+		}
+		return c.JSON(http.StatusOK, teams)
+	}
+}
+
 func GetTeamVotes(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var vote models.TeamVotes

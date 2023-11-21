@@ -9,7 +9,7 @@ onMounted(() => {
 const props = defineProps({
     id: { type: Number, default: undefined },
     name: { type: String, default: undefined },
-    score: { type: Number, default: undefined },
+    score: { type: String, default: undefined },
     teamName: { type: String, default: undefined },
     leader: { type: String, default: undefined },
     group: { type: String, default: '' },
@@ -23,7 +23,8 @@ const selectGroupMap={
     3:'融合创新',
 }
 watch(() => props.score, (newVal) => {
-    // console.log('1111', newVal)
+    debugger
+    console.log('1111', newVal)
     if (props.score !== undefined && props.score !== null&&isBetweenZeroAndTwenty(props.score)&&props.score!=='') {
         showFlag.value = 2
     }
