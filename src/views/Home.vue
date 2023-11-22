@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center mt-8 mb-8">
+    <div class="flex w-full justify-center mt-40 mb-8">
     
         <!-- Your HTML template code here -->
         <div class="w-1/2 flexjustify-center">

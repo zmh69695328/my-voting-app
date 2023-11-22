@@ -194,14 +194,10 @@ const unvoted3 = computed(() => {
 </script>
 
 <template>
-    <div id="ranking" v-if="showtabs === 2" class=" absolute top-16 w-full">
-        <Ranking @hasMounted="getHeights" group="人工智能"></Ranking>
-        <Ranking @hasMounted="getHeights" group="数据赋能"></Ranking>
-        <Ranking @hasMounted="getHeights" group="融合创新"></Ranking>
-    </div>
-    <div v-if="showtabs === 1" class="container mx-auto">
+    <div class="container mx-auto mt-5">
         <div class="flex flex-col">
-
+          <h1 class="ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span
+          class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">决</span> 赛</h1>
             <!-- <CountDown></CountDown> -->
             <h1 class="ml-2 text-lg font-semibold mt-2">投票情况一览（左右滑动）：</h1>
             <Steps :teamVotesList="teamVotesList"></Steps>

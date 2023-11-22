@@ -23,7 +23,7 @@ const selectGroupMap={
     3:'融合创新',
 }
 watch(() => props.score, (newVal) => {
-    debugger
+    
     console.log('1111', newVal)
     if (props.score !== undefined && props.score !== null&&isBetweenZeroAndTwenty(props.score)&&props.score!=='') {
         showFlag.value = 2

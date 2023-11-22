@@ -7,6 +7,7 @@ import { nextTick, onMounted, reactive, ref, watch, onActivated, computed } from
 import { useUsernameStore } from '@/stores/username.js'
 import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
+import Home from '@/views/Home.vue'
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -86,6 +87,7 @@ watch(showtabs, async () => {
             <nav class="container px-6 py-4 mx-auto md:px-12">
                 <div class="items-center justify-center md:flex">
                     <div class="items-center md:flex">
+                        <!-- <img class="w-1/4" src="https://www.qiniu.public.zhuminhao.top/monkey.png"> -->
                         <div v-if="store.username === '' || store.username === undefined"
                             class="inline-block mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300 "
                             @click="showLogin">
@@ -112,20 +114,20 @@ watch(showtabs, async () => {
                 </div>
             </nav>
         </header>
-        <div class="container relative z-10 flex items-center px-6 py-32 mx-auto md:px-12 xl:py-40">
+        <div class=" flex  h-full flex-col container relative z-10  pb-0 px-6 py-32 mx-auto md:px-12 xl:py-40">
             <div class="relative z-10 flex flex-col items-center w-full">
                 <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
                     第5届卡猿杯创新大赛公开赛
                 </h1>
-                <a href="#"
+                <!-- <a href="#"
                     class=" rounded-lg block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"
                     @click="scrollToElement">
                     开始投票
-                </a>
+                </a> -->
             </div>
+            <!-- <router-view name="Home"></router-view> -->
+            <Home></Home>
         </div>
-
-
     </div>
     <router-view />
 </template>
