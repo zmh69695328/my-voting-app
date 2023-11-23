@@ -103,7 +103,7 @@ watch(showtabs, async () => {
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             首页
                         </a>
-                        <a v-if="store.username === '黄素梅'" @click="showtabs = 2"
+                        <a v-if="store.username === '黄素梅'" @click="$router.push('/ranking')"
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             排行榜
                         </a>

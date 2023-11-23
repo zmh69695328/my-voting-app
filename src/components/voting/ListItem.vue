@@ -24,9 +24,8 @@ const selectGroupMap={
     3:'融合创新',
 }
 watch(() => props.score, (newVal) => {
-    
-    console.log('1111', newVal)
-    if (props.score !== undefined && props.score !== null&&isBetweenZeroAndTwenty(props.score)&&props.score!=='') {
+    const store = useUsernameStore()
+    if (store.username&&props.score !== undefined && props.score !== null&&isBetweenZeroAndTwenty(props.score)&&props.score!=='') {
         showFlag.value = 2
     }
     inputValue.value = newVal
@@ -50,6 +49,7 @@ let showFlag = ref(0)
 async function submit() {
     const store = useUsernameStore()
     // check if login
+    debugger
     if (store.username === '' || store.username === undefined) {
         showMessage.value = true
         setTimeout(() => {

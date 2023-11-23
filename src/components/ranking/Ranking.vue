@@ -34,7 +34,7 @@ onMounted(async () => {
 </script>
 <template>
     <div class="flex justify-center items-center w-full flex-col">
-        <h1 class="text-4xl txt-center text-white m-5">{{group }}</h1>
+        <h1 class="text-4xl txt-center  m-5">{{group }}</h1>
         <div class="overflow-x-auto">
             <table class="table table-sm bg-fuchsia-50 rounded  mx-auto  table-compact w-11/12 md:table-fixed" >
                 <thead>
