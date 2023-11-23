@@ -79,7 +79,7 @@ async function getTeams() {
     let result = await response?.json();
     console.log(result);
     teamList.length = 0;
-    teamList.push(...result.teams);
+    teamList.push(...result.teams.filter(t => t.group !== '最佳落地奖'));
   }catch (error) {
     console.error('Error:', error)
   }
@@ -134,7 +134,7 @@ async function getTeamVotesList() {
   if (response.status === 200) {
     teamVotesList.length = 0;
     let result = await response.json();
-    teamVotesList.push(...result.teamvotes);
+    teamVotesList.push(...result.teamvotes.filter(v => v.group !== '最佳落地奖'));
     teamList.forEach((team, index) => {
       if (team.id === result.teamvotes[index].id) {
         team.score = result.teamvotes[index].score
@@ -226,7 +226,7 @@ const unvoted3 = computed(() => {
             <List>
                 <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"
                     v-model:name="team.workname" v-model:score="team.score" v-model:teamName="team.teamname"
-                    :leader="team.leader" :group="team.group" :ImageUrl="team.ImageUrl" :selectGroup="selected"
+                    :leader="team.leader" :order="team.order" :group="team.group" :ImageUrl="team.ImageUrl" :selectGroup="selected"
                     @submit="submit"></ListItem>
             </List>
             <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">

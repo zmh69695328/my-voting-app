@@ -14,7 +14,8 @@ const props = defineProps({
     leader: { type: String, default: undefined },
     group: { type: String, default: '' },
     ImageUrl: { type: String, default: '/teams/team1.png' },
-    selectGroup: { type: Number, default: 0 }
+    selectGroup: { type: Number, default: 0 },
+    order: { type: Number, default: 0 },
 });
 let inputValue = ref(props.score)
 const selectGroupMap={
@@ -29,6 +30,9 @@ watch(() => props.score, (newVal) => {
         showFlag.value = 2
     }
     inputValue.value = newVal
+})
+const mode = computed(() => {
+    return import.meta.env.MODE
 })
 let showMessage = ref(false)
 const isShowWarning = ref(false)
@@ -129,13 +133,13 @@ const onHide = () => (visibleRef.value = false)
             <span>请先登录！</span>
         </div>
     </div>
-    <div v-show="selectGroup===0||selectGroupMap[selectGroup]===group" class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
+    <div  class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
-                <!-- <img :src="ImageUrl" @click="showSingle" /> -->
+                <img v-if="mode==='prod'" :src="ImageUrl" @click="showSingle" />
             </figure>
             <div class="card-body">
-                <h2 class="card-title">{{ id + '. ' + name }}</h2>
+                <h2 class="card-title">{{ order + '. ' + name }}</h2>
                 <p>赛队名：{{ teamName }}</p>
                 <p>赛道：{{ group }}</p>
                 <p>队长：{{ leader }}</p>

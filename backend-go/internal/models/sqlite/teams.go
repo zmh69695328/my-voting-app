@@ -30,6 +30,7 @@ type TeamVotes struct {
 	UserName *string `json:"username"`
 	Score    *int    `json:"score"`
 	Date     *string `json:"date"`
+	Group    string  `json:"group"`
 }
 
 // TaskCollection is collection of Tasks
@@ -100,6 +101,7 @@ func GetTeamsVotesByUsername(db *sql.DB, username *string) TeamVotesCollection {
 	  SELECT
 		  t.id,
 		t.teamname,
+		t."group",
 		lv.username,
 		v.date,
 		v.score
@@ -121,7 +123,7 @@ func GetTeamsVotesByUsername(db *sql.DB, username *string) TeamVotesCollection {
 	result := TeamVotesCollection{}
 	for rows.Next() {
 		teamvotes := TeamVotes{}
-		err2 := rows.Scan(&teamvotes.ID, &teamvotes.TeamName, &teamvotes.UserName, &teamvotes.Date, &teamvotes.Score)
+		err2 := rows.Scan(&teamvotes.ID, &teamvotes.TeamName, &teamvotes.Group, &teamvotes.UserName, &teamvotes.Date, &teamvotes.Score)
 		// Exit if we get an error
 		if err2 != nil {
 			panic(err2)

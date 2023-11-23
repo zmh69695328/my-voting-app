@@ -14,6 +14,7 @@ console.log(route.name)
 
 // 获取路由参数
 console.log(route.params.id)
+console.log(import.meta.env.MODE)
 const showtabs = ref(1) //1是投票页，2是排行榜页
 const login = ref()
 const selected = ref(0)
