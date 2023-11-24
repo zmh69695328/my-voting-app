@@ -8,6 +8,7 @@ import { useUsernameStore } from '@/stores/username.js'
 import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
 import Home from '@/views/Home.vue'
+import BackToTop from '@/components/BackToTop.vue' 
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -107,7 +108,11 @@ watch(showtabs, async () => {
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             排行榜
                         </a>
-                        <a class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+                        <a v-if="store.username === '黄素梅'" @click="$router.push('/votes')"
+                            class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+                            投票记录
+                        </a>
+                        <a  @click="$router.push('/about')" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             关于
                         </a>
 
@@ -126,10 +131,11 @@ watch(showtabs, async () => {
                     开始投票
                 </a> -->
             </div>
-            <!-- <router-view name="Home"></router-view> -->
-            <Home></Home>
+            <router-view name="About"></router-view>
+            <Home v-if="route.name!=='About'"></Home>
         </div>
     </div>
+    <!-- <BackToTop></BackToTop> -->
     <router-view />
 </template>
 

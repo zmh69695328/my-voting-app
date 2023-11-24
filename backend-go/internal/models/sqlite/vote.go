@@ -13,6 +13,7 @@ type Vote struct {
 	Score    int    `json:"score"`
 	TeamID   int    `json:"teamid"`
 	UserName string `json:"username"`
+	Date     string `json:"date"`
 }
 
 // TaskCollection is collection of Tasks
@@ -31,6 +32,18 @@ type Rank struct {
 // TaskCollection is collection of Tasks
 type RankCollection struct {
 	Ranks []Rank `json:"ranks"`
+}
+
+type VoteTeam struct {
+	Vote
+	TeamName string `json:"teamname"`
+	WorkName string `json:"workname"`
+	Order    string `json:"order"`
+	Group    string `json:"group"`
+	Leader   string `json:"leader"`
+}
+type VoteTeamCollection struct {
+	VoteTeam []VoteTeam `json:"VoteTeam"`
 }
 
 // GetRanking from the DB
@@ -137,4 +150,38 @@ func DeleteTask(db *sql.DB, id int) (int64, error) {
 	}
 
 	return result.RowsAffected()
+}
+
+func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteTeamCollection, error) {
+	query := `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, v.date, v.username " +
+		"FROM vote v JOIN team t ON v.teamid = t.id WHERE 1`
+
+	var args []interface{}
+
+	if teamName != "" {
+		query += " AND (t.teamname = ?)"
+		args = append(args, teamName)
+	}
+
+	if username != "" {
+		query += " AND (v.username = ?)"
+		args = append(args, username)
+	}
+	var votes VoteTeamCollection
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return votes, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vote VoteTeam
+		err := rows.Scan(&vote.ID, &vote.TeamName, &vote.WorkName, &vote.Group, &vote.Leader, &vote.Score, &vote.Date, &vote.UserName)
+		if err != nil {
+			return votes, err
+		}
+		votes.VoteTeam = append(votes.VoteTeam, vote)
+	}
+
+	return votes, nil
 }

@@ -15,7 +15,7 @@ const props = defineProps({
     group: { type: String, default: '' },
     ImageUrl: { type: String, default: '/teams/team1.png' },
     selectGroup: { type: Number, default: 0 },
-    order: { type: Number, default: 0 },
+    order: { type: String, default: '' },
 });
 let inputValue = ref(props.score)
 const selectGroupMap={
@@ -49,7 +49,6 @@ let showFlag = ref(0)
 async function submit() {
     const store = useUsernameStore()
     // check if login
-    debugger
     if (store.username === '' || store.username === undefined) {
         showMessage.value = true
         setTimeout(() => {

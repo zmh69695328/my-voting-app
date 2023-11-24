@@ -23,6 +23,7 @@ func main() {
 	e.POST("/api/teams", handlers.GetTeamsByGroup(db))
 	e.POST("/api/ranking", handlers.GetRanking(db))
 	e.POST("/api/teamvotes", handlers.GetTeamVotes(db))
+	e.POST("/api/votesbyteamnameandusername", handlers.GetVotesByTeamNameAndUsername(db))
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

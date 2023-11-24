@@ -7,6 +7,7 @@ import { nextTick, onMounted, reactive, ref, watch, onActivated, computed } from
 import { useUsernameStore } from '@/stores/username.js'
 import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
+import BackToTop from '@/components/BackToTop.vue'
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -40,7 +41,7 @@ function scrollToElement() {
   }
 }
 function scrollToSteps() {
-  const targetElement = document.querySelector('.steps');
+  const targetElement = document.querySelector('.contexttitle');
   if (targetElement) {
     setTimeout(() => {
       targetElement.scrollIntoView({
@@ -103,6 +104,20 @@ onMounted(async () => {
   if (store.username !== '' && store.username !== undefined) {
     getTeamVotesList()
   }
+})
+onMounted(async () => {
+  // debugger
+  // scrolltoElement()
+  const targetElement = document.querySelector('.contexttitle');
+    if (targetElement) {
+        setTimeout(() => {
+            targetElement.scrollIntoView({
+                behavior: 'smooth', // 使用平滑滚动效果
+                block: 'start',     // 滚动到元素的顶部
+            })
+        }, 150);
+
+    }
 })
 watch(showtabs, async () => {
   // await getTeams()
@@ -196,7 +211,7 @@ const unvoted3 = computed(() => {
 <template>
     <div class="container mx-auto mt-5">
         <div class="flex flex-col">
-          <h1 class="ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span
+          <h1 class="contexttitle ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span
           class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">决</span> 赛</h1>
             <!-- <CountDown></CountDown> -->
             <h1 class="ml-2 text-lg font-semibold mt-2">投票情况一览（左右滑动）：</h1>
@@ -233,16 +248,9 @@ const unvoted3 = computed(() => {
         投票
       </button> -->
         </div>
+        <BackToTop @scrollToTop="scrollToSteps"></BackToTop>
     </div>
-    <div id="topButton" class="rightside fixed bottom-20 h-10 right-2 w-10 rounded-full">
-        <button class="button" @click="scrollToSteps">
-            <svg t="1698144093962" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                p-id="1446" width="32" height="32">
-                <path
-                    d="M848.69632 642.33472L537.344 330.9824a35.83488 35.83488 0 0 0-50.68288 0L175.3088 642.33472a35.84 35.84 0 0 0 50.68288 50.688L512 407.00928l286.00832 286.00832a35.83488 35.83488 0 0 0 50.68288 0 35.82976 35.82976 0 0 0 0.00512-50.68288z"
-                    fill="#666666" p-id="1447"></path>
-            </svg> </button>
-    </div>
+
 </template>
 <style scoped>
 .fullscreen {

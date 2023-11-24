@@ -4,7 +4,7 @@
   width: 100%;
   height: 100%;
 }
-html,body{
+html{
   padding: 0;
   margin: 0;
   width: 100%;
@@ -12,6 +12,18 @@ html,body{
   /* position: absolute; */
   left: 0;
   top: 0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+body{
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  /* position: absolute; */
+  left: 0;
+  top: 0;
+  height: 100%;
   overflow: hidden;
   overflow-y: auto;
 }
