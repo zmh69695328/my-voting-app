@@ -78,7 +78,7 @@ watch(showtabs, async () => {
 </script>
 
 <template>
-    <Login ref="login" @login="submit"></Login>
+    <Login ref="login"></Login>
     <div id="container" class="relative h-screen bg-indigo-900" :class="{ 'fullscreen': showtabs === 2 }">
         <img v-if="showtabs === 1" src="https://www.qiniu.public.zhuminhao.top/6.svg"
             class="absolute object-cover w-full h-full" />

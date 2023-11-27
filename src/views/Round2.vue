@@ -209,6 +209,7 @@ const unvoted3 = computed(() => {
 </script>
 
 <template>
+    <Login ref="login" @login="submit"></Login>
     <div class="container mx-auto mt-5">
         <div class="flex flex-col">
           <h1 class="contexttitle ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span

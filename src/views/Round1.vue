@@ -168,6 +168,7 @@ async function submit() {
 </script>
 
 <template>
+  <Login ref="login" @login="submit"></Login>
   <div class="container mx-auto mt-5">
     <div class="flex flex-col">
 
