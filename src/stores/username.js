@@ -11,7 +11,7 @@ import { defineStore } from 'pinia'
 //   return { count, doubleCount, increment }
 // })
 export const useUsernameStore = defineStore('username', () => {
-  const username = ref(sessionStorage.getItem('username')||'')
+  const username = ref(localStorage.getItem('username')||'')
   // debugger
   return { username }
 })

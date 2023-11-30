@@ -8,6 +8,8 @@ import { useUsernameStore } from '@/stores/username.js'
 import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
 import BackToTop from '@/components/BackToTop.vue'
+import { isNotEmpty } from '@/utils/utils.js'
+
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -24,12 +26,8 @@ function showLogin() {
   login.value.showModal = true
 }
 const store = useUsernameStore()
-function scrollToElement() {
-
-  if (store.username === '' || store.username === undefined) {
-    showLogin()
-  }
-  const targetElement = document.getElementById('voting');
+function scrollToElement(id) {
+  const targetElement = document.getElementById(id);
   if (targetElement) {
     setTimeout(() => {
       targetElement.scrollIntoView({
@@ -37,7 +35,6 @@ function scrollToElement() {
         block: 'start',     // 滚动到元素的顶部
       })
     }, 10);
-
   }
 }
 function scrollToSteps() {
@@ -81,10 +78,10 @@ async function getTeams() {
     console.log(result);
     teamList.length = 0;
     teamList.push(...result.teams.filter(t => t.group !== '最佳落地奖'));
-  }catch (error) {
+  } catch (error) {
     console.error('Error:', error)
   }
-  
+
 }
 
 // 计算子元素的高度 
@@ -109,15 +106,15 @@ onMounted(async () => {
   // debugger
   // scrolltoElement()
   const targetElement = document.querySelector('.contexttitle');
-    if (targetElement) {
-        setTimeout(() => {
-            targetElement.scrollIntoView({
-                behavior: 'smooth', // 使用平滑滚动效果
-                block: 'start',     // 滚动到元素的顶部
-            })
-        }, 150);
+  if (targetElement) {
+    setTimeout(() => {
+      targetElement.scrollIntoView({
+        behavior: 'smooth', // 使用平滑滚动效果
+        block: 'start',     // 滚动到元素的顶部
+      })
+    }, 150);
 
-    }
+  }
 })
 watch(showtabs, async () => {
   // await getTeams()
@@ -205,53 +202,83 @@ const unvoted3 = computed(() => {
 })
 // const unvoted2 = computed(() => `${firstName.value} ${lastName.value}`)
 // const unvoted3 = computed(() => `${firstName.value} ${lastName.value}`)
-
+async function afterSubmit() {
+  // await getTeamVotesList()
+  console.log(teamVotesList)
+  let flag = true
+  for (let i = 0; i < teamVotesList.length; i++) {
+    if (!isNotEmpty(teamVotesList[i].score)) {
+      console.log(teamVotesList[i])
+      flag = false
+      scrollToElement(teamVotesList[i].id)
+      break
+    }
+  }
+  if (flag) {
+    showAlert.value=true
+  }
+}
+let showAlert = ref(false)
+function closeTab(){
+  window.location.href="about:blank";
+}
 </script>
 
 <template>
-    <Login ref="login" @login="submit"></Login>
-    <div class="container mx-auto mt-5">
-        <div class="flex flex-col">
-          <h1 class="contexttitle ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl"><span
-          class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">决</span> 赛</h1>
-            <!-- <CountDown></CountDown> -->
-            <h1 class="ml-2 text-lg font-semibold mt-2">投票情况一览（左右滑动）：</h1>
-            <Steps :teamVotesList="teamVotesList"></Steps>
-            <h1 class="ml-2 text-lg font-semibold mt-2">未投票队伍列表：</h1>
-            <p class="ml-2">
-                <span class="text-black font-bold">人工智能：</span>
-                <span class="text-red-500">{{ unvoted1 }}</span>
-            </p>
-            <p class="ml-2">
-                <span class="text-black font-bold">数据赋能：</span>
-                <span class="text-red-500">{{ unvoted2 }}</span>
-            </p>
-            <p class="ml-2">
-                <span class="text-black font-bold">融合创新：</span>
-                <span class="text-red-500">{{ unvoted3 }}</span>
-            </p>
-            <h3 id='voting' class="ml-2 text-lg font-semibold mt-2 pt-6 pb-1">
-                提示：点击赛队介绍图片即可放大观看
-            </h3>
-            <div class="mb-3 flex ">
-                <button class="btn ml-2 mr-1" :class="{ 'btn-active': selected === 0 }" @click="selectGroup(0)">所有</button>
-                <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
-                <button class="btn mr-1" :class="{ 'btn-active': selected === 2 }" @click="selectGroup(2)">数据赋能</button>
-                <button class="btn mr-1" :class="{ 'btn-active': selected === 3 }" @click="selectGroup(3)">融合创新</button>
-            </div>
-            <List>
-                <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"
-                    v-model:name="team.workname" v-model:score="team.score" v-model:teamName="team.teamname"
-                    :leader="team.leader" :order="team.order" :group="team.group" :ImageUrl="team.ImageUrl" :selectGroup="selected"
-                    @submit="submit"></ListItem>
-            </List>
-            <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
-        投票
-      </button> -->
-        </div>
-        <BackToTop @scrollToTop="scrollToSteps"></BackToTop>
+  <Login ref="login" @login="submit"></Login>
+  <div class="container mx-auto mt-5">
+    <div class="flex flex-col">
+      <h1 class="contexttitle ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">决</span> 赛</h1>
+      <!-- <CountDown></CountDown> -->
+      <h1 class="ml-2 text-lg font-semibold mt-2">投票情况一览（左右滑动）：</h1>
+      <Steps :teamVotesList="teamVotesList"></Steps>
+      <h1 class="ml-2 text-lg font-semibold mt-2">未投票队伍列表：</h1>
+      <p class="ml-2">
+        <span class="text-black font-bold">人工智能：</span>
+        <span class="text-red-500">{{ unvoted1 }}</span>
+      </p>
+      <p class="ml-2">
+        <span class="text-black font-bold">数据赋能：</span>
+        <span class="text-red-500">{{ unvoted2 }}</span>
+      </p>
+      <p class="ml-2">
+        <span class="text-black font-bold">融合创新：</span>
+        <span class="text-red-500">{{ unvoted3 }}</span>
+      </p>
+      <h3 id='voting' class="ml-2 text-lg font-semibold mt-2 pt-6 pb-1">
+        提示：点击赛队介绍图片即可放大观看
+      </h3>
+      <div class="mb-3 flex ">
+        <button class="btn ml-2 mr-1" :class="{ 'btn-active': selected === 0 }" @click="selectGroup(0)">所有</button>
+        <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
+        <button class="btn mr-1" :class="{ 'btn-active': selected === 2 }" @click="selectGroup(2)">数据赋能</button>
+        <button class="btn mr-1" :class="{ 'btn-active': selected === 3 }" @click="selectGroup(3)">融合创新</button>
+      </div>
+      <List>
+        <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"
+          v-model:name="team.workname" v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"
+          :order="team.order" :group="team.group" :ImageUrl="team.ImageUrl" :selectGroup="selected" @submit="submit">
+        </ListItem>
+      </List>
+      <button class="btn glass text-center w-7/12 mx-auto text-lg m-5 mt-10 bg-orange-500 text-white"
+        @click="afterSubmit">
+        结束投票
+      </button>
     </div>
-
+    <BackToTop @scrollToTop="scrollToSteps"></BackToTop>
+  </div>
+  <div v-if="showAlert" role="alert" class="alert absolute inset-x-0 top-1/2 w-1/2 center mx-auto">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <span>感谢您的支持与参与！</span>
+    <div>
+      <button class="btn btn-sm" @click="showAlert = false;">取消</button>
+      <button class="btn btn-sm btn-primary" @click="closeTab">离开</button>
+    </div>
+  </div>
 </template>
 <style scoped>
 .fullscreen {

@@ -132,7 +132,7 @@ const onHide = () => (visibleRef.value = false)
             <span>请先登录！</span>
         </div>
     </div>
-    <div v-show="selectGroup===0||selectGroupMap[selectGroup]===group" class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
+    <div :id="props.id" v-show="selectGroup===0||selectGroupMap[selectGroup]===group" class="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 p-4">
         <div class="card w-96 bg-base-100 shadow-xl mx-auto">
             <figure>
                 <img v-if="mode==='prod'" :src="ImageUrl" @click="showSingle" />

@@ -27,6 +27,11 @@ function showLogin() {
 }
 const store = useUsernameStore()
 
+onMounted(() => {
+    if (store.username === '' || store.username === undefined){
+        showLogin()
+    }
+})
 function scrollToSteps() {
     const targetElement = document.querySelector('.steps');
     if (targetElement) {
@@ -123,7 +128,7 @@ watch(showtabs, async () => {
         <div class=" flex  h-full flex-col container relative z-10  pb-0 px-6 py-32 mx-auto md:px-12 xl:py-40">
             <div class="relative z-10 flex flex-col items-center w-full">
                 <h1 class="mt-4 font-extrabold leading-tight text-center text-white text-5xl sm:text-5xl">
-                    第5届卡猿杯创新大赛公开赛
+                    第五届“卡猿杯”创新大赛决赛评选
                 </h1>
                 <!-- <a href="#"
                     class=" rounded-lg block px-4 py-3 mt-10 text-lg font-bold text-white uppercase bg-gray-800 hover:bg-gray-900"

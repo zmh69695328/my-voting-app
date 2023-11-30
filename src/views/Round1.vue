@@ -8,6 +8,7 @@ import { useUsernameStore } from '@/stores/username.js'
 import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
 import BackToTop from '@/components/BackToTop.vue'
+import {isNotEmpty} from '@/utils/utils.js'
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -21,12 +22,8 @@ function showLogin() {
   login.value.showModal = true
 }
 const store = useUsernameStore()
-function scrollToElement() {
-
-  if (store.username === '' || store.username === undefined) {
-    showLogin()
-  }
-  const targetElement = document.getElementById('voting');
+function scrollToElement(id) {
+  const targetElement = document.getElementById(id);
   if (targetElement) {
     setTimeout(() => {
       targetElement.scrollIntoView({
@@ -34,9 +31,9 @@ function scrollToElement() {
         block: 'start',     // 滚动到元素的顶部
       })
     }, 10);
-
   }
 }
+
 function scrollToSteps() {
   const targetElement = document.querySelector('.contexttitle');
   if (targetElement) {
@@ -46,7 +43,6 @@ function scrollToSteps() {
         block: 'start',     // 滚动到元素的顶部
       })
     }, 10);
-
   }
 }
 
@@ -165,6 +161,22 @@ async function submit() {
   getTeamVotesList()
 }
 
+async function afterSubmit() {
+  // await getTeamVotesList()
+  console.log(teamVotesList)
+  let flag=true
+  for(let i=0;i<teamVotesList.length;i++){
+    if(!isNotEmpty(teamVotesList[i].score)){
+      console.log(teamVotesList[i])
+      flag=false
+      scrollToElement(teamVotesList[i].id)
+      break
+    }
+  }
+  if(flag){
+    this.$router.push('/home');
+  }
+}
 </script>
 
 <template>
@@ -188,9 +200,10 @@ async function submit() {
           v-model:name="team.workname" v-model:score="team.score" v-model:teamName="team.teamname" :leader="team.leader"
           :group="team.group" :ImageUrl="team.ImageUrl" :order="team.order" :selectGroup="selected" @submit="submit"></ListItem>
       </List>
-      <!-- <button class="btn glass text-center w-6/12 mx-auto text-lg m-6 bg-indigo-900 text-white" @click="submit">
-        投票
-      </button> -->
+      <button class="btn glass text-center w-7/12 mx-auto text-lg m-5 mt-10 bg-orange-500 text-white" @click="afterSubmit">
+      
+        结束投票
+      </button>
     </div>
     <BackToTop @scrollToTop="scrollToSteps"></BackToTop>
 

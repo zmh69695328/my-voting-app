@@ -40,7 +40,7 @@ let username = ref('')
 const emit = defineEmits(['login'])
 function login() {
     store.username = username.value
-    sessionStorage.setItem('username', username.value)
+    localStorage.setItem('username', username.value)
     showModal.value = false
     emit('login')
 }
