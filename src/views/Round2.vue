@@ -155,7 +155,7 @@ async function getTeamVotesList() {
   }
 }
 async function submit() {
-  getTeamVotesList()
+  // getTeamVotesList()
 }
 
 const unvoted1 = computed(() => {

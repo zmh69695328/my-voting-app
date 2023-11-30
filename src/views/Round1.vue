@@ -158,7 +158,7 @@ async function getTeamVotesList() {
   }
 }
 async function submit() {
-  getTeamVotesList()
+  // getTeamVotesList()
 }
 
 async function afterSubmit() {
