@@ -9,6 +9,7 @@ import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
 import BackToTop from '@/components/BackToTop.vue'
 import {isNotEmpty} from '@/utils/utils.js'
+import { useRouter } from 'vue-router'
 const route = useRoute()
 // 获取路由名称
 console.log(route.name)
@@ -158,9 +159,10 @@ async function getTeamVotesList() {
   }
 }
 async function submit() {
-  // getTeamVotesList()
+  getTeamVotesList()
 }
 
+const router = useRouter()
 async function afterSubmit() {
   // await getTeamVotesList()
   console.log(teamVotesList)
@@ -174,7 +176,7 @@ async function afterSubmit() {
     }
   }
   if(flag){
-    this.$router.push('/home');
+    router.push('/home');
   }
 }
 </script>
