@@ -39,7 +39,7 @@ const isShowWarningUnderline = ref(false)
 const emit = defineEmits(['update:score', 'login', 'submit'])
 function handleChange(val) {
     console.log(val)
-    emit('update:score', inputValue.value)
+    // emit('update:score', inputValue.value)
 }
 function handleBlur() {
     isShowWarning.value = !isBetweenZeroAndTwenty(inputValue.value)

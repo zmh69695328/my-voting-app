@@ -9,6 +9,7 @@ import Steps from '@/components/Steps.vue'
 import { useRoute } from 'vue-router'
 import BackToTop from '@/components/BackToTop.vue'
 import { isNotEmpty } from '@/utils/utils.js'
+import { useRouter } from 'vue-router'
 
 const route = useRoute()
 // 获取路由名称
@@ -202,25 +203,29 @@ const unvoted3 = computed(() => {
 })
 // const unvoted2 = computed(() => `${firstName.value} ${lastName.value}`)
 // const unvoted3 = computed(() => `${firstName.value} ${lastName.value}`)
+
+let showAlert = ref(false)
+const router = useRouter()
 async function afterSubmit() {
   // await getTeamVotesList()
   console.log(teamVotesList)
   let flag = true
-  for (let i = 0; i < teamVotesList.length; i++) {
-    if (!isNotEmpty(teamVotesList[i].score)) {
-      console.log(teamVotesList[i])
-      flag = false
-      scrollToElement(teamVotesList[i].id)
-      break
-    }
-  }
+  // for (let i = 0; i < teamVotesList.length; i++) {
+  //   if (!isNotEmpty(teamVotesList[i].score)) {
+  //     console.log(teamVotesList[i])
+  //     flag = false
+  //     scrollToElement(teamVotesList[i].id)
+  //     break
+  //   }
+  // }
   if (flag) {
-    showAlert.value=true
+    router.push({
+      name: 'Home',
+      query: {
+        flag: true,
+      },
+    });
   }
-}
-let showAlert = ref(false)
-function closeTab(){
-  window.location.href="about:blank";
 }
 </script>
 
@@ -229,7 +234,8 @@ function closeTab(){
   <div class="container mx-auto mt-5">
     <div class="flex flex-col">
       <h1 class="contexttitle ml-2 mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400"></span> 决赛</h1>
+        <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400"></span> 决赛
+      </h1>
       <!-- <CountDown></CountDown> -->
       <h1 class="ml-2 text-lg font-semibold mt-2">投票情况一览（左右滑动）：</h1>
       <Steps :teamVotesList="teamVotesList"></Steps>
@@ -276,7 +282,7 @@ function closeTab(){
     <span>感谢您的支持与参与！</span>
     <div>
       <button class="btn btn-sm" @click="showAlert = false;">取消</button>
-      <button class="btn btn-sm btn-primary" @click="closeTab">离开</button>
+      <button class="btn btn-sm btn-primary" @click="afterSubmit">离开</button>
     </div>
   </div>
 </template>
@@ -291,4 +297,5 @@ function closeTab(){
   width: 100%;
   position: relative;
   /* overflow: hidden; */
-}</style>
+}
+</style>
