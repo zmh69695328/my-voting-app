@@ -203,8 +203,7 @@ async function afterSubmit() {
           :group="team.group" :ImageUrl="team.ImageUrl" :order="team.order" :selectGroup="selected" @submit="submit"></ListItem>
       </List>
       <button class="btn glass text-center w-7/12 mx-auto text-lg m-5 mt-10 bg-orange-500 text-white" @click="afterSubmit">
-      
-        结束投票
+      返回首页
       </button>
     </div>
     <BackToTop @scrollToTop="scrollToSteps"></BackToTop>

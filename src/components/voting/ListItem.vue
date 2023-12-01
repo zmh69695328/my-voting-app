@@ -45,7 +45,15 @@ function handleBlur() {
     isShowWarning.value = !isBetweenZeroAndTwenty(inputValue.value)
 }
 let showFlag = ref(0)
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
 
+const submitDebounce = debounce(() => submit());
 async function submit() {
     const store = useUsernameStore()
     // check if login
@@ -145,9 +153,9 @@ const onHide = () => (visibleRef.value = false)
                 <div class="card-actions">
                     <div class="flex flex-row w-full">
                         <span class="label-text basis-2/12 text-base">评分：</span>
-                        <input v-model="inputValue" @blur="handleBlur" @change="handleChange"
-                            class="basis-6/12 input input-bordered input-primary w-8 max-w-xs" type="text"
-                            placeholder="请输入0-20分">
+                        <input v-model="inputValue" type="number" pattern="[0-9]*" @blur="handleBlur" @change="handleChange"
+                            class="basis-6/12 input input-bordered input-primary w-8 max-w-xs"
+                            placeholder="请输入0-100分">
                         <div v-if="showFlag > 0" class="flex basis-1/12 m-1">
                             <span v-if="showFlag === 1" class=" loading loading-spinner text-success"></span>
                             <div v-if="showFlag === 2" class="flex justify-center items-center ">
@@ -164,7 +172,7 @@ const onHide = () => (visibleRef.value = false)
                             </div>
                         </div>
                         <button class="btn glass basis-3/12  w-6/12 mx-auto text-lg  bg-indigo-900 text-white"
-                            @click="submit">
+                            @click="submitDebounce">
                             投票
                         </button>
                     </div>

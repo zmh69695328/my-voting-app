@@ -5,7 +5,7 @@ export function isBetweenZeroAndTwenty(str) {
       const number = parseInt(str, 10);
   
       // 检查数字是否在0到20之间
-      if (number >= 0 && number <= 20) {
+      if (number >= 0 && number <= 100) {
         return true; // 符合条件
       }
     }
