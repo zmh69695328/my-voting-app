@@ -1,18 +1,22 @@
 <script setup>
 import { useRoute } from 'vue-router'
 const route = useRoute()
-import { onMounted, onUpdated } from 'vue'
+import { onMounted, onUpdated,watch } from 'vue'
 import { ref } from 'vue'
-console.log(route.query.flag)
+console.log(route.query.flag,111)
 const flag = ref(false)
-onMounted(() => {
-    flag.value = route.query.flag
-    console.log(flag.value)
-})
-watch
+// const {query:{flag}}=route
+
+watch(
+      () => route.query.flag,
+      () => {
+        console.log('侦听到 ID 变化')
+        flag.value=true
+      }
+    )
 </script>
 <template>
-    <div v-if="flag" role="alert" class="alert absolute inset-x-0 top-1/2 w-1/2 center mx-auto">
+    <div v-show="flag===true" role="alert" class="alert absolute inset-x-0 top-3 w-1/2 center mx-auto">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
