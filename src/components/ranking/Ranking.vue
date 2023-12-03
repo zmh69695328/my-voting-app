@@ -43,7 +43,7 @@ onMounted(async () => {
                         <th colspan="5">作品</th>
                         <th colspan="2">赛队名</th>
                         <th colspan="2">队长</th>
-                        <th>总分</th>
+                        <th>平均分</th>
                     </tr>
                 </thead>
                 <tbody>

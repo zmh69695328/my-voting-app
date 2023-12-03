@@ -69,11 +69,11 @@ func GetRanking(db *sql.DB, group string) RankCollection {
 			)
 	)
 	SELECT
-			t.leader,
-			t.workname,
+		t.leader,
+		t.workname,
 		t."group",
 		t.teamname,
-		IFNULL(SUM(lv.score), 0) AS total_score
+		IFNULL(AVG(lv.score), 0) AS total_score
 	FROM
 		team t
 	LEFT JOIN
