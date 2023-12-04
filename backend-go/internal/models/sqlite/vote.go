@@ -214,7 +214,7 @@ func GetVotesHistory(db *sql.DB) (VoteTeamHistoryCollection, error) {
 				MAX(vote.date), 
 				vote.username
 			FROM vote
-			GROUP BY vote.id
+			GROUP BY vote.teamid,vote.username
 		) AS vote ON team.id = vote.teamid
 		WHERE team."group" = '最佳落地奖'
 		GROUP BY team.id`
