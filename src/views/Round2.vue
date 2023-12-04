@@ -210,14 +210,14 @@ async function afterSubmit() {
   // await getTeamVotesList()
   console.log(teamVotesList)
   let flag = true
-  // for (let i = 0; i < teamVotesList.length; i++) {
-  //   if (!isNotEmpty(teamVotesList[i].score)) {
-  //     console.log(teamVotesList[i])
-  //     flag = false
-  //     scrollToElement(teamVotesList[i].id)
-  //     break
-  //   }
-  // }
+  for (let i = 0; i < teamVotesList.length; i++) {
+    if (!isNotEmpty(teamVotesList[i].score)) {
+      console.log(teamVotesList[i])
+      flag = false
+      scrollToElement(teamVotesList[i].id)
+      break
+    }
+  }
   if (flag) {
     router.push({
       name: 'Home',
