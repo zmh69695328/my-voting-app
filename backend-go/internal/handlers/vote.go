@@ -63,3 +63,17 @@ func GetVotesByTeamNameAndUsername(db *sql.DB) echo.HandlerFunc {
 		}
 	}
 }
+
+func GetVotesHistory(db *sql.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// var vote models.VoteTeam
+		// c.Bind(&vote)
+		votes, err := models.GetVotesHistory(db)
+		// Return a JSON response if successful
+		if err == nil {
+			return c.JSON(http.StatusOK, votes)
+		} else {
+			return err
+		}
+	}
+}

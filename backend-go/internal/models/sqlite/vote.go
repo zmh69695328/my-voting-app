@@ -185,3 +185,90 @@ func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteT
 
 	return votes, nil
 }
+
+type VoteTeamHistory struct {
+	Vote
+	TeamName  string         `json:"teamname"`
+	WorkName  string         `json:"workname"`
+	VoteCount int            `json:"votecount`
+	Voters    sql.NullString `json:"voters"`
+}
+type VoteTeamHistoryCollection struct {
+	Round1 []VoteTeamHistory `json:"round1"`
+	Round2 []VoteTeamHistory `json:"round2"`
+}
+
+func GetVotesHistory(db *sql.DB) (VoteTeamHistoryCollection, error) {
+	query := `SELECT 
+	team.id, 
+	team.teamname, 
+	team.workname, 
+	COUNT(vote.id) as votecount, 
+	GROUP_CONCAT(vote.username, ',') as voters
+		FROM team
+		LEFT JOIN (
+			SELECT 
+				vote.id, 
+				vote.teamid, 
+				vote.score, 
+				MAX(vote.date), 
+				vote.username
+			FROM vote
+			GROUP BY vote.id
+		) AS vote ON team.id = vote.teamid
+		WHERE team."group" = '最佳落地奖'
+		GROUP BY team.id`
+
+	var args []interface{}
+	var votes VoteTeamHistoryCollection
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return votes, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vote VoteTeamHistory
+		err := rows.Scan(&vote.ID, &vote.TeamName, &vote.WorkName, &vote.VoteCount, &vote.Voters)
+		if err != nil {
+			return votes, err
+		}
+		votes.Round1 = append(votes.Round1, vote)
+	}
+
+	query = `SELECT 
+	team.id, 
+	team.teamname, 
+	team.workname, 
+	COUNT(vote.id) as vote_count, 
+	GROUP_CONCAT(vote.username, ',') as voters
+FROM team
+LEFT JOIN (
+	SELECT 
+		vote.id, 
+		vote.teamid, 
+		vote.score, 
+		MAX(vote.date), 
+		vote.username
+	FROM vote
+	GROUP BY vote.id
+) AS vote ON team.id = vote.teamid
+WHERE team."group" = '人工智能' OR team."group" = '数据赋能' OR team."group" = '融合创新'
+GROUP BY team.id`
+	rows, err = db.Query(query, args...)
+	if err != nil {
+		return votes, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vote VoteTeamHistory
+		err := rows.Scan(&vote.ID, &vote.TeamName, &vote.WorkName, &vote.VoteCount, &vote.Voters)
+		if err != nil {
+			return votes, err
+		}
+		votes.Round2 = append(votes.Round2, vote)
+	}
+
+	return votes, nil
+}
