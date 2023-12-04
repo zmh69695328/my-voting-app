@@ -9,6 +9,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 )
+import "strconv"
 
 // GetTasks endpoint
 func GetVotes(db *sql.DB) echo.HandlerFunc {
@@ -45,6 +46,9 @@ func GetRanking(db *sql.DB) echo.HandlerFunc {
 		var rank models.Rank
 		c.Bind(&rank)
 		ranks := models.GetRanking(db, rank.Group)
+		for i := 0; i < len(ranks.Ranks); i++ {
+			ranks.Ranks[i].TotalScore, _ = strconv.ParseFloat(fmt.Sprintf("%.3f", ranks.Ranks[i].TotalScore), 64)
+		}
 		// Return a JSON response if successful
 		return c.JSON(http.StatusOK, ranks)
 	}

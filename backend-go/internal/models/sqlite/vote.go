@@ -22,11 +22,11 @@ type VoteCollection struct {
 }
 
 type Rank struct {
-	Leader     string `json:"leader"`
-	WorkName   string `json:"workname"`
-	Group      string `json:"group"`
-	TeamName   string `json:"teamname"`
-	TotalScore int    `json:"total_score"`
+	Leader     string  `json:"leader"`
+	WorkName   string  `json:"workname"`
+	Group      string  `json:"group"`
+	TeamName   string  `json:"teamname"`
+	TotalScore float64 `json:"total_score"`
 }
 
 // TaskCollection is collection of Tasks
@@ -251,7 +251,7 @@ LEFT JOIN (
 		MAX(vote.date), 
 		vote.username
 	FROM vote
-	GROUP BY vote.id
+	GROUP BY vote.teamid,vote.username
 ) AS vote ON team.id = vote.teamid
 WHERE team."group" = '人工智能' OR team."group" = '数据赋能' OR team."group" = '融合创新'
 GROUP BY team.id`
