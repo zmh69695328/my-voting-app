@@ -52,21 +52,11 @@ func GetRanking(db *sql.DB, group string) RankCollection {
 		SELECT
 			v.teamid,
 			v.score,
-			v.date,
+			MAX(v.date),
 			v.username
 		FROM
 			vote v
-		WHERE
-			(v.teamid, v.username, v.date) IN (
-				SELECT
-					teamid,
-					username,
-					MAX(date) AS latest_date
-				FROM
-					vote
-				GROUP BY
-					teamid, username
-			)
+		GROUP BY v.teamid,v.username
 	)
 	SELECT
 		t.leader,
