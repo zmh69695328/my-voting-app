@@ -23,9 +23,9 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go cmd/api-server/main.g
 
 FROM alpine:latest as prod
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY --from=builder /docker-voting-go .
+COPY --from=builder /docker-voting-go /
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
