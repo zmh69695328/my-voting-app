@@ -35,4 +35,4 @@ COPY --from=builder /docker-voting-go .
 EXPOSE 9222
 
 # Run
-CMD ["/app/docker-voting-go"]
+CMD ["/docker-voting-go"]
