@@ -58,7 +58,7 @@ func GetVotesByTeamNameAndUsername(db *sql.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var vote models.VoteTeam
 		c.Bind(&vote)
-		votes, err := models.GetVotesByTeamNameAndUsername(db, vote.TeamName, vote.UserName)
+		votes, err := models.GetVotesByTeamNameAndUsername(db, vote.TeamName, vote.UserName, vote.IsDuplicate)
 		// Return a JSON response if successful
 		if err == nil {
 			return c.JSON(http.StatusOK, votes)

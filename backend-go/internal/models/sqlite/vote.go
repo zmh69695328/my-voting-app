@@ -36,11 +36,12 @@ type RankCollection struct {
 
 type VoteTeam struct {
 	Vote
-	TeamName string `json:"teamname"`
-	WorkName string `json:"workname"`
-	Order    string `json:"order"`
-	Group    string `json:"group"`
-	Leader   string `json:"leader"`
+	TeamName    string `json:"teamname"`
+	WorkName    string `json:"workname"`
+	Order       string `json:"order"`
+	Group       string `json:"group"`
+	Leader      string `json:"leader"`
+	IsDuplicate bool   `json:"isduplicate"`
 }
 type VoteTeamCollection struct {
 	VoteTeam []VoteTeam `json:"VoteTeam"`
@@ -142,9 +143,16 @@ func DeleteTask(db *sql.DB, id int) (int64, error) {
 	return result.RowsAffected()
 }
 
-func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteTeamCollection, error) {
-	query := `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, v.date, v.username " +
+func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string, isDuplicate bool) (VoteTeamCollection, error) {
+	var query string
+	if isDuplicate {
+		query = `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, MAX(v.date), v.username " +
 		"FROM vote v JOIN team t ON v.teamid = t.id WHERE 1`
+
+	} else {
+		query = `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, v.date, v.username " +
+		"FROM vote v JOIN team t ON v.teamid = t.id WHERE 1`
+	}
 
 	var args []interface{}
 
@@ -156,6 +164,9 @@ func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteT
 	if username != "" {
 		query += " AND (v.username = ?)"
 		args = append(args, username)
+	}
+	if isDuplicate {
+		query += " GROUP BY v.teamid,v.username"
 	}
 	var votes VoteTeamCollection
 	rows, err := db.Query(query, args...)

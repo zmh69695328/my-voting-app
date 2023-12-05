@@ -16,7 +16,8 @@ async function search() {
         },
         body: JSON.stringify({
             teamName: teamName.value.trim(),
-            userName: userName.value.trim()
+            userName: userName.value.trim(),
+            isDuplicate:isDuplicate.value
         })
     }).catch(error => {
         console.error('Error:', error)
@@ -59,15 +60,14 @@ function showIsDuplicate(e) {
             评委名称：
             <input v-model="userName" type="text" placeholder=" " class="input input-bordered input-sm w-full max-w-xs" />
         </div>
-        <!-- <div class="m-2 " @click.stop="showIsDuplicate">
-            <div class="form-control" >
+        <div class="m-2 " >
+            <div class="form-control inline-block" @click="showIsDuplicate">
                 <label class="label cursor-pointer justify-start" >
-                    <span class="label-text">是否去重：</span>
-                    <input type="checkbox" class="toggle" checked/>
+                    <span class="label-text w-full">是否去重：</span>
+                    <input type="checkbox" class="toggle toggle-sm" checked/>
                 </label>
             </div>
-
-        </div> -->
+        </div>
     </div>
     <div>
         <div class="overflow-x-auto">
