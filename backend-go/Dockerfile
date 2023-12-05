@@ -25,7 +25,7 @@ FROM alpine:latest as prod
 
 WORKDIR /app
 
-COPY --from=builder /app/docker-voting-go .
+COPY --from=builder /docker-voting-go .
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
@@ -35,4 +35,4 @@ COPY --from=builder /app/docker-voting-go .
 EXPOSE 9222
 
 # Run
-CMD ["/docker-voting-go"]
+CMD ["/app/docker-voting-go"]
