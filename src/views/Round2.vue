@@ -28,15 +28,15 @@ function showLogin() {
 }
 const store = useUsernameStore()
 function scrollToElement(id) {
-  const targetElement = document.getElementById(id);
-  if (targetElement) {
     setTimeout(() => {
+      const targetElement = document.getElementById(id);
+      if (targetElement) {
       targetElement.scrollIntoView({
         behavior: 'smooth', // 使用平滑滚动效果
         block: 'start',     // 滚动到元素的顶部
       })
+    }
     }, 10);
-  }
 }
 function scrollToSteps() {
   const targetElement = document.querySelector('.contexttitle');
@@ -155,8 +155,21 @@ async function getTeamVotesList() {
     })
   }
 }
-async function submit() {
-  getTeamVotesList()
+async function submit(team) {
+  // getTeamVotesList()
+  console.log(team)
+  teamVotesList.forEach((v)=>{
+    if (team.teamid === v.id) {
+      v.score=team.score
+      v.username=team.username
+      }
+  })
+  teamList.forEach((v) => {
+      if (team.teamid === v.id) {
+        v.score=team.score
+      v.username=team.username
+      }
+  })
 }
 
 const unvoted1 = computed(() => {
@@ -207,7 +220,7 @@ const unvoted3 = computed(() => {
 let showAlert = ref(false)
 const router = useRouter()
 async function afterSubmit() {
-  // await getTeamVotesList()
+  await getTeamVotesList()
   selectGroup(0)
   console.log(teamVotesList)
   let flag = true

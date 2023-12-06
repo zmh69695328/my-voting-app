@@ -105,7 +105,7 @@ async function submit() {
         console.log(result)
         setTimeout(() => {
             showFlag.value = 2
-            emit('submit')
+            emit('submit',req)
         }, 200);
         // showFlag.value = 2
     }
