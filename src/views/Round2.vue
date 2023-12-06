@@ -208,6 +208,7 @@ let showAlert = ref(false)
 const router = useRouter()
 async function afterSubmit() {
   // await getTeamVotesList()
+  selectGroup(0)
   console.log(teamVotesList)
   let flag = true
   for (let i = 0; i < teamVotesList.length; i++) {
