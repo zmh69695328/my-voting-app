@@ -241,16 +241,16 @@ async function afterSubmit() {
       <Steps :teamVotesList="teamVotesList"></Steps>
       <h1 class="ml-2 text-lg font-semibold mt-2">未投票队伍列表：</h1>
       <p class="ml-2">
-        <span class="text-black font-bold">人工智能：</span>
-        <span class="text-red-500">{{ unvoted1 }}</span>
-      </p>
-      <p class="ml-2">
         <span class="text-black font-bold">数据赋能：</span>
         <span class="text-red-500">{{ unvoted2 }}</span>
       </p>
       <p class="ml-2">
         <span class="text-black font-bold">融合创新：</span>
         <span class="text-red-500">{{ unvoted3 }}</span>
+      </p>
+      <p class="ml-2">
+        <span class="text-black font-bold">人工智能：</span>
+        <span class="text-red-500">{{ unvoted1 }}</span>
       </p>
       <h3 id='voting' class="ml-2 text-lg font-semibold mt-2 pt-6 pb-1">
         提示：点击赛队介绍图片即可放大观看
