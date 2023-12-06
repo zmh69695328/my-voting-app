@@ -208,16 +208,17 @@ let showAlert = ref(false)
 const router = useRouter()
 async function afterSubmit() {
   // await getTeamVotesList()
+  selectGroup(0)
   console.log(teamVotesList)
   let flag = true
-  // for (let i = 0; i < teamVotesList.length; i++) {
-  //   if (!isNotEmpty(teamVotesList[i].score)) {
-  //     console.log(teamVotesList[i])
-  //     flag = false
-  //     scrollToElement(teamVotesList[i].id)
-  //     break
-  //   }
-  // }
+  for (let i = 0; i < teamVotesList.length; i++) {
+    if (!isNotEmpty(teamVotesList[i].score)) {
+      console.log(teamVotesList[i])
+      flag = false
+      scrollToElement(teamVotesList[i].id)
+      break
+    }
+  }
   if (flag) {
     router.push({
       name: 'Home',
@@ -241,10 +242,6 @@ async function afterSubmit() {
       <Steps :teamVotesList="teamVotesList"></Steps>
       <h1 class="ml-2 text-lg font-semibold mt-2">未投票队伍列表：</h1>
       <p class="ml-2">
-        <span class="text-black font-bold">人工智能：</span>
-        <span class="text-red-500">{{ unvoted1 }}</span>
-      </p>
-      <p class="ml-2">
         <span class="text-black font-bold">数据赋能：</span>
         <span class="text-red-500">{{ unvoted2 }}</span>
       </p>
@@ -252,14 +249,18 @@ async function afterSubmit() {
         <span class="text-black font-bold">融合创新：</span>
         <span class="text-red-500">{{ unvoted3 }}</span>
       </p>
+      <p class="ml-2">
+        <span class="text-black font-bold">人工智能：</span>
+        <span class="text-red-500">{{ unvoted1 }}</span>
+      </p>
       <h3 id='voting' class="ml-2 text-lg font-semibold mt-2 pt-6 pb-1">
         提示：点击赛队介绍图片即可放大观看
       </h3>
       <div class="mb-3 flex ">
         <button class="btn ml-2 mr-1" :class="{ 'btn-active': selected === 0 }" @click="selectGroup(0)">所有</button>
-        <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
         <button class="btn mr-1" :class="{ 'btn-active': selected === 2 }" @click="selectGroup(2)">数据赋能</button>
         <button class="btn mr-1" :class="{ 'btn-active': selected === 3 }" @click="selectGroup(3)">融合创新</button>
+        <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
       </div>
       <List>
         <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"

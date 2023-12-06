@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.20.11
+FROM golang:1.20.11 as builder
 
 # Set destination for COPY
 WORKDIR /app
@@ -19,7 +19,13 @@ COPY . .
 
 # Build
 RUN ls -al
-RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go cmd/api-server/main.go
+RUN CGO_ENABLED=1 GOOS=linux go build -o docker-voting-go cmd/api-server/main.go
+
+FROM ubuntu:latest as prod
+
+WORKDIR /app
+
+COPY --from=builder /app/docker-voting-go .
 
 # Optional:
 # To bind to a TCP port, runtime parameters must be supplied to the docker command.
@@ -29,4 +35,4 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o /docker-voting-go cmd/api-server/main.g
 EXPOSE 9222
 
 # Run
-CMD ["/docker-voting-go"]
+CMD ["/app/docker-voting-go"]

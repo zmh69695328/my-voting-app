@@ -22,11 +22,11 @@ type VoteCollection struct {
 }
 
 type Rank struct {
-	Leader     string `json:"leader"`
-	WorkName   string `json:"workname"`
-	Group      string `json:"group"`
-	TeamName   string `json:"teamname"`
-	TotalScore int    `json:"total_score"`
+	Leader     string  `json:"leader"`
+	WorkName   string  `json:"workname"`
+	Group      string  `json:"group"`
+	TeamName   string  `json:"teamname"`
+	TotalScore float64 `json:"total_score"`
 }
 
 // TaskCollection is collection of Tasks
@@ -36,11 +36,12 @@ type RankCollection struct {
 
 type VoteTeam struct {
 	Vote
-	TeamName string `json:"teamname"`
-	WorkName string `json:"workname"`
-	Order    string `json:"order"`
-	Group    string `json:"group"`
-	Leader   string `json:"leader"`
+	TeamName    string `json:"teamname"`
+	WorkName    string `json:"workname"`
+	Order       string `json:"order"`
+	Group       string `json:"group"`
+	Leader      string `json:"leader"`
+	IsDuplicate bool   `json:"isduplicate"`
 }
 type VoteTeamCollection struct {
 	VoteTeam []VoteTeam `json:"VoteTeam"`
@@ -52,28 +53,18 @@ func GetRanking(db *sql.DB, group string) RankCollection {
 		SELECT
 			v.teamid,
 			v.score,
-			v.date,
+			MAX(v.date),
 			v.username
 		FROM
 			vote v
-		WHERE
-			(v.teamid, v.username, v.date) IN (
-				SELECT
-					teamid,
-					username,
-					MAX(date) AS latest_date
-				FROM
-					vote
-				GROUP BY
-					teamid, username
-			)
+		GROUP BY v.teamid,v.username
 	)
 	SELECT
-			t.leader,
-			t.workname,
+		t.leader,
+		t.workname,
 		t."group",
 		t.teamname,
-		IFNULL(SUM(lv.score), 0) AS total_score
+		IFNULL(AVG(lv.score), 0) AS total_score
 	FROM
 		team t
 	LEFT JOIN
@@ -152,9 +143,16 @@ func DeleteTask(db *sql.DB, id int) (int64, error) {
 	return result.RowsAffected()
 }
 
-func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteTeamCollection, error) {
-	query := `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, v.date, v.username " +
+func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string, isDuplicate bool) (VoteTeamCollection, error) {
+	var query string
+	if isDuplicate {
+		query = `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, MAX(v.date), v.username " +
 		"FROM vote v JOIN team t ON v.teamid = t.id WHERE 1`
+
+	} else {
+		query = `SELECT v.id, t.teamname, t.workname, t."group", t.leader, v.score, v.date, v.username " +
+		"FROM vote v JOIN team t ON v.teamid = t.id WHERE 1`
+	}
 
 	var args []interface{}
 
@@ -166,6 +164,9 @@ func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteT
 	if username != "" {
 		query += " AND (v.username = ?)"
 		args = append(args, username)
+	}
+	if isDuplicate {
+		query += " GROUP BY v.teamid,v.username"
 	}
 	var votes VoteTeamCollection
 	rows, err := db.Query(query, args...)
@@ -181,6 +182,93 @@ func GetVotesByTeamNameAndUsername(db *sql.DB, teamName, username string) (VoteT
 			return votes, err
 		}
 		votes.VoteTeam = append(votes.VoteTeam, vote)
+	}
+
+	return votes, nil
+}
+
+type VoteTeamHistory struct {
+	Vote
+	TeamName  string         `json:"teamname"`
+	WorkName  string         `json:"workname"`
+	VoteCount int            `json:"votecount`
+	Voters    sql.NullString `json:"voters"`
+}
+type VoteTeamHistoryCollection struct {
+	Round1 []VoteTeamHistory `json:"round1"`
+	Round2 []VoteTeamHistory `json:"round2"`
+}
+
+func GetVotesHistory(db *sql.DB) (VoteTeamHistoryCollection, error) {
+	query := `SELECT 
+	team.id, 
+	team.teamname, 
+	team.workname, 
+	COUNT(vote.id) as votecount, 
+	GROUP_CONCAT(vote.username, ',') as voters
+		FROM team
+		LEFT JOIN (
+			SELECT 
+				vote.id, 
+				vote.teamid, 
+				vote.score, 
+				MAX(vote.date), 
+				vote.username
+			FROM vote
+			GROUP BY vote.teamid,vote.username
+		) AS vote ON team.id = vote.teamid
+		WHERE team."group" = '最佳落地奖'
+		GROUP BY team.id`
+
+	var args []interface{}
+	var votes VoteTeamHistoryCollection
+	rows, err := db.Query(query, args...)
+	if err != nil {
+		return votes, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vote VoteTeamHistory
+		err := rows.Scan(&vote.ID, &vote.TeamName, &vote.WorkName, &vote.VoteCount, &vote.Voters)
+		if err != nil {
+			return votes, err
+		}
+		votes.Round1 = append(votes.Round1, vote)
+	}
+
+	query = `SELECT 
+	team.id, 
+	team.teamname, 
+	team.workname, 
+	COUNT(vote.id) as vote_count, 
+	GROUP_CONCAT(vote.username, ',') as voters
+FROM team
+LEFT JOIN (
+	SELECT 
+		vote.id, 
+		vote.teamid, 
+		vote.score, 
+		MAX(vote.date), 
+		vote.username
+	FROM vote
+	GROUP BY vote.teamid,vote.username
+) AS vote ON team.id = vote.teamid
+WHERE team."group" = '人工智能' OR team."group" = '数据赋能' OR team."group" = '融合创新'
+GROUP BY team.id`
+	rows, err = db.Query(query, args...)
+	if err != nil {
+		return votes, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var vote VoteTeamHistory
+		err := rows.Scan(&vote.ID, &vote.TeamName, &vote.WorkName, &vote.VoteCount, &vote.Voters)
+		if err != nil {
+			return votes, err
+		}
+		votes.Round2 = append(votes.Round2, vote)
 	}
 
 	return votes, nil

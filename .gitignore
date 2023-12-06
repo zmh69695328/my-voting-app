@@ -27,3 +27,5 @@ coverage
 *.sln
 *.sw?
 *.db
+storage.db
+backend-go/cmd/api-server/storage.db

@@ -4,21 +4,16 @@ onMounted(async () => {
     search()
 })
 
-const teamName = ref('')
-const userName = ref('')
-const VoteTeam = ref([])
+
+const round1 = ref([])
+const round2 = ref([])
 async function search() {
 
-    let response = await fetch('/api/votesbyteamnameandusername', {
+    let response = await fetch('/api/voteshistory', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify({
-            teamName: teamName.value.trim(),
-            userName: userName.value.trim(),
-            isDuplicate:isDuplicate.value
-        })
+        }
     }).catch(error => {
         console.error('Error:', error)
     });
@@ -26,7 +21,8 @@ async function search() {
         console.log(response)
     } else {
         let result = await response.json();
-        VoteTeam.value = result.VoteTeam
+        round1.value = result.round1
+        round2.value = result.round2
     }
 }
 const isDuplicate = ref(true)
@@ -50,7 +46,7 @@ function showIsDuplicate(e) {
             </svg>
         </button>
     </div>
-    <div class="flex flex-col m-5">
+    <!-- <div class="flex flex-col m-5">
         <h1>筛选条件：</h1>
         <div class="m-2">
             队名：
@@ -60,13 +56,10 @@ function showIsDuplicate(e) {
             评委名称：
             <input v-model="userName" type="text" placeholder=" " class="input input-bordered input-sm w-full max-w-xs" />
         </div>
-        <div class="m-2 " >
-            <div class="form-control inline-block" @click="showIsDuplicate">
-                <label class="label cursor-pointer justify-start" >
-                    <span class="label-text w-full">是否去重：</span>
-                    <input type="checkbox" class="toggle toggle-sm" checked/>
-                </label>
-            </div>
+    </div> -->
+    <div class="flex flex-col m-5">
+        <div class="m-2 text-2xl">
+            上届落地项目
         </div>
     </div>
     <div>
@@ -77,25 +70,19 @@ function showIsDuplicate(e) {
                         <th></th>
                         <td>队伍名</td>
                         <td>作品名</td>
-                        <td>组别</td>
-                        <td>队长</td>
-                        <td>评委名称</td>
-                        <td>分数</td>
-                        <td>时间</td>
+                        <td>投票数</td>
+                        <td>投票人</td>
                         <td>ID</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in VoteTeam" :key="item.id">
+                    <tr v-for="(item, index) in round1" :key="item.id">
                         <th>{{ index + 1 }}</th>
                         <td>{{ item.teamname }}</td>
                         <td>{{ item.workname }}</td>
-                        <td>{{ item.groupname }}</td>
-                        <td>{{ item.leader }}</td>
-                        <td>{{ item.username }}</td>
-                        <td>{{ item.score }}</td>
-                        <th>{{ item.date }}</th>
-                        <th>{{ item.id }}</th>
+                        <td>{{ item.VoteCount }}</td>
+                        <td>{{ item.voters.String }}</td>
+                        <td>{{ item.id }}</td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -103,11 +90,50 @@ function showIsDuplicate(e) {
                         <th></th>
                         <td>队伍名</td>
                         <td>作品名</td>
-                        <td>组别</td>
-                        <td>队长</td>
-                        <td>评委名称</td>
-                        <td>分数</td>
-                        <td>时间</td>
+                        <td>投票数</td>
+                        <td>投票人</td>
+                        <td>ID</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div class="flex flex-col m-5">
+        <div class="m-2 text-2xl">
+            决赛项目
+        </div>
+    </div>
+    <div>
+        <div class="overflow-x-auto">
+            <table class="table table-xs table-pin-rows table-pin-cols table-zebra">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <td>队伍名</td>
+                        <td>作品名</td>
+                        <td>投票数</td>
+                        <td>投票人</td>
+                        <td>ID</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in round2" :key="item.id">
+                        <th>{{ index + 1 }}</th>
+                        <td>{{ item.teamname }}</td>
+                        <td>{{ item.workname }}</td>
+                        <td>{{ item.VoteCount }}</td>
+                        <td>{{ item.voters.String }}</td>
+                        <td>{{ item.id }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <td>队伍名</td>
+                        <td>作品名</td>
+                        <td>投票数</td>
+                        <td>投票人</td>
                         <td>ID</td>
                     </tr>
                 </tfoot>

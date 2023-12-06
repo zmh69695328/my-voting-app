@@ -11,17 +11,18 @@ watch(
       () => route.query.flag,
       () => {
         console.log('侦听到 ID 变化')
-        flag.value=true
+        // if(route.query)
+        flag.value=route.query.flag==='true'?true:false
       }
     )
 </script>
 <template>
-    <div v-show="flag===true" role="alert" class="alert absolute inset-x-0 top-3 w-1/2 center mx-auto">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6">
+    <div v-show="flag===true" role="alert" class="alert absolute inset-x-0 top-12 w-2/3 center mx-auto">
+        <!-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span>感谢您的支持与参与！</span>
+        </svg> -->
+        <span>🎉  感谢您的支持与参与！</span>
         <!-- <div>
       <button class="btn btn-sm" @click="showAlert = false;">取消</button>
       <button class="btn btn-sm btn-primary" @click="afterSubmit">离开</button>

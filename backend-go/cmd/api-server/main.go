@@ -24,6 +24,7 @@ func main() {
 	e.POST("/api/ranking", handlers.GetRanking(db))
 	e.POST("/api/teamvotes", handlers.GetTeamVotes(db))
 	e.POST("/api/votesbyteamnameandusername", handlers.GetVotesByTeamNameAndUsername(db))
+	e.POST("/api/voteshistory", handlers.GetVotesHistory(db))
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())

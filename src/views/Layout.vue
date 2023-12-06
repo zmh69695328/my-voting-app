@@ -113,9 +113,13 @@ watch(showtabs, async () => {
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             排行榜
                         </a>
-                        <a v-if="store.username === '黄素梅'" @click="$router.push('/votes')"
+                        <a v-if="store.username === '黄素梅'" @click="$router.push('/history')"
                             class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             投票记录
+                        </a>
+                        <a v-if="store.username === '黄素梅'" @click="$router.push('/votes')"
+                            class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
+                            明细
                         </a>
                         <a  @click="$router.push('/about')" class="mx-3 text-lg text-white uppercase cursor-pointer hover:text-gray-300">
                             关于
