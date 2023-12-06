@@ -257,9 +257,9 @@ async function afterSubmit() {
       </h3>
       <div class="mb-3 flex ">
         <button class="btn ml-2 mr-1" :class="{ 'btn-active': selected === 0 }" @click="selectGroup(0)">所有</button>
-        <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
         <button class="btn mr-1" :class="{ 'btn-active': selected === 2 }" @click="selectGroup(2)">数据赋能</button>
         <button class="btn mr-1" :class="{ 'btn-active': selected === 3 }" @click="selectGroup(3)">融合创新</button>
+        <button class="btn mr-1" :class="{ 'btn-active': selected === 1 }" @click="selectGroup(1)">人工智能</button>
       </div>
       <List>
         <ListItem v-for="team in teamList" :key="team.id" @login="showLogin" v-model:id="team.id"
