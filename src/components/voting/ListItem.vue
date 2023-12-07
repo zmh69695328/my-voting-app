@@ -45,7 +45,7 @@ function handleBlur() {
     isShowWarning.value = !isBetweenZeroAndTwenty(inputValue.value)
 }
 let showFlag = ref(0)
-function debounce(func, timeout = 300){
+function debounce(func, timeout = 688){
   let timer;
   return (...args) => {
     clearTimeout(timer);
