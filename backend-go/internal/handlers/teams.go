@@ -70,7 +70,7 @@ func getImageUrl(id int) string {
 	key := "work" + fmt.Sprint(id) + ".png"
 	deadline := time.Now().Add(time.Second * 86400).Unix() //1天有效期
 	privateAccessURL := storage.MakePrivateURL(mac, domain, key, deadline)
-	fmt.Println(privateAccessURL)
+	// fmt.Println(privateAccessURL)
 	return privateAccessURL
 }
 

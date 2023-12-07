@@ -2,7 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
+	"log"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -101,12 +101,12 @@ func GetRanking(db *sql.DB, group string) RankCollection {
 // PutTask into DB
 func PutVote(db *sql.DB, teamid int, score int, username string) (int64, error) {
 	// sql := "INSERT INTO tasks(name) VALUES(?)"
-	fmt.Println(teamid, score)
+	// fmt.Println(teamid, score)
 	// score = 10
 	// 获取北京时间
 	loc, err := time.LoadLocation("Asia/Shanghai")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 	beijingTime := time.Now().In(loc).Format("2006-01-02 15:04:05.999")
 	sql := "INSERT INTO vote(teamid, score,username,date) VALUES(?, ?,?,?)"

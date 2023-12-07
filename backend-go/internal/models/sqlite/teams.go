@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -65,11 +64,11 @@ func GetTeams(db *sql.DB) TeamCollection {
 // get teams by group
 func GetTeamsByGroup(db *sql.DB, group string) TeamCollection {
 	sql := `SELECT * FROM team AS t where t."group" = ?`
-	fmt.Println(group)
+	// fmt.Println(group)
 	rows, err := db.Query(sql, group)
 	// Exit if the SQL doesn't work for some reason
 	if err != nil {
-		fmt.Println(group)
+		// fmt.Println(group)
 		panic(err)
 	}
 	// make sure to cleanup when the program exits

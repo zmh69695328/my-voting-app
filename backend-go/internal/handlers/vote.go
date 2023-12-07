@@ -3,9 +3,9 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
-	"net/http"
-
 	"github.com/zmh69695328/voting-backend-go/internal/models/sqlite"
+	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -26,8 +26,8 @@ func PutVote(db *sql.DB) echo.HandlerFunc {
 		// Map imcoming JSON body to the new Task
 		c.Bind(&vote)
 		// Add a task using our new model
-		fmt.Println(vote, c)
-		fmt.Println("投票记录：", vote.Score, vote.TeamID, vote.ID)
+		// fmt.Println(vote, c)
+		log.Println("投票记录：", vote.Score, vote.TeamID, vote.ID, vote.UserName)
 		id, err := models.PutVote(db, vote.TeamID, vote.Score, vote.UserName)
 		// Return a JSON response if successful
 		if err == nil {
