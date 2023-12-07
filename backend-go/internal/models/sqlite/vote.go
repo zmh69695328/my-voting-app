@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -102,7 +103,13 @@ func PutVote(db *sql.DB, teamid int, score int, username string) (int64, error) 
 	// sql := "INSERT INTO tasks(name) VALUES(?)"
 	fmt.Println(teamid, score)
 	// score = 10
-	sql := "INSERT INTO vote(teamid, score,username) VALUES(?, ?,?)"
+	// 获取北京时间
+	loc, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		fmt.Println(err)
+	}
+	beijingTime := time.Now().In(loc).Format("2006-01-02 15:04:05.999")
+	sql := "INSERT INTO vote(teamid, score,username,date) VALUES(?, ?,?,?)"
 	// Create a prepared SQL statement
 	stmt, err := db.Prepare(sql)
 	// Exit if we get an error
@@ -113,7 +120,7 @@ func PutVote(db *sql.DB, teamid int, score int, username string) (int64, error) 
 	defer stmt.Close()
 
 	// Replace the '?' in our prepared statement with 'name'
-	result, err2 := stmt.Exec(teamid, score, username)
+	result, err2 := stmt.Exec(teamid, score, username, beijingTime)
 	// Exit if we get an error
 	if err2 != nil {
 		panic(err2)
