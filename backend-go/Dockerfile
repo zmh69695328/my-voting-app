@@ -23,6 +23,16 @@ RUN CGO_ENABLED=1 GOOS=linux go build -o docker-voting-go cmd/api-server/main.go
 
 FROM ubuntu:latest as prod
 
+ENV TZ=Asia/Shanghai \
+    DEBIAN_FRONTEND=noninteractive
+
+RUN apt update \
+    && apt install -y tzdata \
+    && ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
+    && dpkg-reconfigure --frontend noninteractive tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY --from=builder /app/docker-voting-go .
